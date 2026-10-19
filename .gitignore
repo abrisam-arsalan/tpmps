@@ -1,0 +1,21 @@
+# Dependencies
+app/node_modules/
+app/.next/
+app/out/
+
+# Build
+*.tsbuildinfo
+next-env.d.ts
+
+# Env
+app/.env
+app/.env*.local
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.log
+
+# Bun
+bun.lockb

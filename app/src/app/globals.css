@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* ── Template finance clean → sekolah
+   Background: lavender lembut #f2f0fb (seperti di template)
+   Kartu: putih, border #ece9f5, radius 20–24px, bayang halus
+   Aksen: biru #2b5cff (tombol utama), hijau #1a9e6b (naik/ok)
+   Tinta: #0f172a
+*/
+:root {
+  --background: #f2f0fb;
+  --foreground: #0f172a;
+  --muted: #6b7280;
+  --border: #ece9f5;
+  --card: #ffffff;
+  --accent: #2b5cff;
+  --accent-hover: #1d4ed8;
+  --lavender: #f2f0fb;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: #2b5cff; color: #fff; }
+a { text-underline-offset: 3px; }
+
+/* Kartu template — putih, sudut besar, bayang lembut */
+:where(.card-paper) {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+/* Bottom nav shadow */
+.nav-bottom-shadow {
+  box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.08);
+}

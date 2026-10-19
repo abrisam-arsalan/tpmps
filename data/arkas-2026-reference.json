@@ -1,0 +1,126 @@
+{
+  "metadata": {
+    "satuan": "SMP NEGERI 5 TEGAL",
+    "kode_org": "20329830",
+    "urusan": "1.01 - PENDIDIKAN",
+    "tahun": 2026,
+    "tanggal_pengesahan": "2026-08-18",
+    "kepala_sekolah": "Sri Handayani Reksowati, S.Pd., M.Pd. (NIP 197402262006042011)",
+    "lokasi": "Kec. Tegal Selatan",
+    "total": 628280000,
+    "sumber_file": "rka-unit-221-output.pdf (Lembar Kertas Kerja Unit Kerja Pemkot Tegal TA 2026)"
+  },
+  "ringkasan_kategori": [
+    {
+      "kode": "5.1.02.01",
+      "nama": "Belanja Barang Habis Pakai",
+      "jumlah": 259494750,
+      "pct": 41.3
+    },
+    {
+      "kode": "5.1.02.01.01.00.05",
+      "nama": "Belanja Makanan dan Minuman (kegiatan pendidikan) — bagian dari 5.1.02.01",
+      "jumlah": 75885000,
+      "pct": 12.1,
+      "catatan": "Snack & nasi box untuk 30+ jenis kegiatan: MPLS, LDKS, OSN/O2SN/FLS3N, POPDA, TKA, dll"
+    },
+    {
+      "kode": "5.1.02.02.01.00.xx",
+      "nama": "Belanja Jasa (Honor instruktur, langganan daya/jurnal/internet, registrasi lomba, sewa)",
+      "jumlah": 120837150,
+      "pct": 19.2
+    },
+    {
+      "kode": "5.1.02.03",
+      "nama": "Belanja Pemeliharaan (Printer, AC, Komputer, Gedung 9 paket, Taman)",
+      "jumlah": 125440000,
+      "pct": 20.0
+    },
+    {
+      "kode": "5.1.02.04",
+      "nama": "Belanja Perjalanan Dinas",
+      "jumlah": 10000000,
+      "pct": 1.6
+    },
+    {
+      "kode": "5.2.02.01",
+      "nama": "Belanja Modal Pompa",
+      "jumlah": 2167400,
+      "pct": 0.3
+    },
+    {
+      "kode": "5.2.02.05",
+      "nama": "Belanja Modal Alat Kantor & Rumah Tangga (CCTV, tenda, mebel, sound system)",
+      "jumlah": 23718700,
+      "pct": 3.8
+    },
+    {
+      "kode": "5.2.02.10",
+      "nama": "Belanja Modal Komputer (Printer, Scanner, Router)",
+      "jumlah": 18979000,
+      "pct": 3.0
+    },
+    {
+      "kode": "5.2.05.01",
+      "nama": "Belanja Modal Buku (Umum, Agama, IP Praktis)",
+      "jumlah": 67643000,
+      "pct": 10.8
+    }
+  ],
+  "karakteristik": [
+    "Dokumen resmi Pemkot Tegal format Kertas Kerja Unit Kerja (bukan format ARKAS Kemdikbud langsung) — kode rekening 5.1/5.2 sesuai Permendagri 77/2020 (SIPD), perlu mapping ke kode ARKAS BOS 5.1.02.xx untuk referensi RKAS di aplikasi",
+    "Belanja habis pakai dominan (41.3%): ATK besar (kertas 75 rim folio, tinta 400 botol), cetak massal (128.106 lembar soal, 5.209 fotokopi), dan belanja kebersihan/sarana",
+    "Komponen Mamin 75.8jt (12.1%) tersebar di 30+ kegiatan kesiswaan — pola ini harus jadi template kegiatan RKT (mis. K-07 Lomba & Ekstra)",
+    "Pemeliharaan gedung 108.5jt (17.3% dari total) dalam 9 paket — indikasi prioritas sarpras di RKJM 2026-2030",
+    "Belanja buku 67.6jt (10.8%) — 195 eks buku umum + 100 agama + 208 IP praktis — relevan untuk sasaran Literasi di Rapor Pendidikan",
+    "Belanja modal komputer hanya 3.0% — potensi gap untuk sasaran Digitalisasi/Inklim di Rapor Pendidikan",
+    "Tanpa rincian pendapatan BOS per triwulan di file ini — perlu dilengkapi saat impor RKT→RKAS (sumber dana BOS Reguler/BOSDA/Komite)"
+  ],
+  "kegiatan_terdeteksi": [
+    "LDKS OSIS/PRAMUKA/PMR (270 dus snack + 270 dus makan)",
+    "Perkemahan Besar Pramuka 611 siswa (18.3jt makan)",
+    "TEF (Tegal Education Fair) — snack, dekorasi stand 5jt, kontribusi 2.5jt, karnaval",
+    "Lomba berjenjang: OSN, O2SN, FLS3N, FTBI, MAPSI, POPDA, Futsal AFK/Allievo",
+    "MPLS, PPDB, PILKETOS, Jumbara PMR, UKP PMR, TKA Kelas 9, ANBK",
+    "IHT (In House Training) 90 dus, MGMP 75 dus, Coaching clinic BOSP",
+    "P5 implisit: Karnaval TEF, Dekorasi Stand Pameran",
+    "Pemeliharaan: Printer 4 unit, AC 8 unit, Komputer 10 unit, Gedung, Taman",
+    "POPDA: BPJS 90 orang, sewa ELF 16 unit-hari, sewa GOR, bola voli/basket/sepak"
+  ],
+  "mapping_ke_snp": {
+    "SNP 1 Standar Isi (kurikulum)": [
+      "5.2.05.01 Buku 67.6jt",
+      "Cetak soal 38.4jt",
+      "Bahan praktek KBM 8jt"
+    ],
+    "SNP 2 Proses": [
+      "Instruktur 45.5jt",
+      "IHT 1.35jt",
+      "Cetak & penggandaan 81.8jt"
+    ],
+    "SNP 3 Kompetensi Lulusan (asesmen)": [
+      "ANBK 13.1jt",
+      "TKA 720rb-2.3jt",
+      "Lomba OSN/O2SN"
+    ],
+    "SNP 4 Pendidik & Tendik": [
+      "Honor instruktur",
+      "Buku agenda, buku tulis",
+      "BPJS"
+    ],
+    "SNP 5 Sarpras": [
+      "Pemeliharaan gedung 108.5jt",
+      "Pompa, CCTV, mebel, komputer, alat olahraga 15.9jt"
+    ],
+    "SNP 6 Pengelolaan": [
+      "ATK 35.4jt",
+      "Langganan internet 20.4jt, listrik 8jt, air 2.7jt, jurnal 7.2jt"
+    ],
+    "SNP 7 Pembiayaan (BOS)": [
+      "Seluruh RKAS ini adalah realisasi pembiayaan"
+    ],
+    "SNP 8 Penilaian": [
+      "Cetak rapor clipper 10.5jt, blangko, kartu pinjam"
+    ]
+  }
+}
