@@ -8,6 +8,7 @@ import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export
 import { CP_SEED, cpBadgeSumber } from "@/lib/ksp";
 import type { KSP, KSPKomponen, RKJM, RKT } from "@/lib/types";
 import { TAHUN_OPSI } from "@/lib/types";
+import { PageHead } from "@/components/PageHead";
 import Link from "next/link";
 
 const TA = TAHUN_OPSI;
@@ -77,9 +78,8 @@ export default function KSPPage() {
   if (!rkjm) {
     return (
       <div className="space-y-4">
-        <Kicker>Kurikulum</Kicker>
-        <h2 className="text-[17px] font-semibold">Buat RKJM dulu</h2>
-        <Card className="p-6 text-center"><p className="text-sm text-zinc-600">RKJM belum ada</p><Link href="/rkjm" className="mt-4 inline-flex h-9 px-4 items-center justify-center rounded-xl bg-[#2b5cff] text-white text-sm">Buka RKJM</Link></Card>
+        <PageHead title="Buat RKJM dulu" kicker="Kurikulum" />
+        <Card className="p-6 text-center"><p className="text-sm text-zinc-600">RKJM belum ada</p><Link href="/rkjm" className="mt-4 inline-flex min-h-[44px] px-5 items-center justify-center rounded-xl bg-[#2b5cff] text-white text-sm">Buka RKJM</Link></Card>
       </div>
     );
   }
@@ -88,20 +88,17 @@ export default function KSPPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
-        <div>
-          <Kicker>Kurikulum</Kicker>
-          <h2 className="text-[17px] font-semibold tracking-tight mt-1">Tahun {tahun}</h2>
-        </div>
+        <PageHead title={`Tahun ${tahun}`} kicker="Kurikulum" />
         <div className="flex gap-2">
-          <select value={tahun} onChange={(e) => setTahun(e.target.value)} className="h-9 rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
+          <label><span className="sr-only">Tahun ajaran</span><select value={tahun} onChange={(e) => setTahun(e.target.value)} aria-label="Tahun ajaran" className="min-h-[44px] rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
             {TA.map((t) => <option key={t} value={t}>{t}</option>)}
-          </select>
-          <button onClick={() => setShowInfo((v) => !v)} className="h-9 w-9 grid place-items-center rounded-full border border-[#ece9f5] bg-white text-xs" aria-label="Info">?</button>
+          </select></label>
+          <button onClick={() => setShowInfo((v) => !v)} aria-expanded={showInfo} aria-label="Info Kurikulum" className="min-h-[44px] min-w-[44px] grid place-items-center rounded-full border border-[#ece9f5] bg-white text-xs">?</button>
         </div>
       </div>
       {showInfo && <div className="rounded-xl border border-[#ece9f5] bg-[#f8f7ff] px-3 py-2.5 text-xs leading-4 text-zinc-600">Visi dan Misi mengikuti RKJM. Koding kelas 7 opsional, Kepanduan wajib.</div>}
       {showBanner && !showInfo && <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">CP Agama diperbarui — cek Bank CP di bawah.</div>}
-      {msg && <div className="rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-2 text-xs">{msg}</div>}
+      {msg && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-2 text-xs">{msg}</div>}
       <DocActions status={ksp.status} onSiapCetak={() => persist({ ...ksp, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...ksp, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...ksp, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!ksp.scanDataUrl} sahHint={!ksp.scanDataUrl ? "Upload scan dulu" : undefined} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
@@ -124,10 +121,10 @@ export default function KSPPage() {
         {!rkt || rkt.kegiatan.length === 0 ? (
           <div className="mt-2 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-800">Rencana {tahun} kosong — <Link href="/rkt" className="underline">buat dulu</Link></div>
         ) : (
-          <div className="mt-2 flex flex-wrap gap-1.5">
+          <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-label="Taut kegiatan RKT">
             {rkt.kegiatan.map((k) => {
               const on = ksp.rkt_kegiatan_ids.includes(k.id);
-              return <button key={k.id} onClick={() => { const ids = on ? ksp.rkt_kegiatan_ids.filter((x) => x !== k.id) : [...ksp.rkt_kegiatan_ids, k.id]; persist({ ...ksp, rkt_kegiatan_ids: ids }, on ? "Dilepas" : "Ditautkan"); }} className={`rounded-full border px-3 py-1 text-xs ${on ? "bg-[#2b5cff] text-white border-[#2b5cff]" : "bg-white border-[#ece9f5] hover:bg-[#f8f7ff]"}`}>#{k.no} {k.identifikasi_kode}</button>;
+              return <button key={k.id} aria-pressed={on} onClick={() => { const ids = on ? ksp.rkt_kegiatan_ids.filter((x) => x !== k.id) : [...ksp.rkt_kegiatan_ids, k.id]; persist({ ...ksp, rkt_kegiatan_ids: ids }, on ? "Dilepas" : "Ditautkan"); }} className={`min-h-[44px] rounded-full border px-4 text-xs ${on ? "bg-[#2b5cff] text-white border-[#2b5cff]" : "bg-white border-[#ece9f5] hover:bg-[#f8f7ff]"}`}>#{k.no} {k.identifikasi_kode}</button>;
             })}
           </div>
         )}

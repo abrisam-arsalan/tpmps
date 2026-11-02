@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRapor } from "@/lib/useRapor";
 import { Card, Kicker } from "@/components/ui";
+import { PageHead } from "@/components/PageHead";
 
 export default function AnalisisPage() {
   const { dataset, sumber } = useRapor();
@@ -9,12 +10,8 @@ export default function AnalisisPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
-        <div>
-          <Kicker>Analisis — {prio.length} prioritas</Kicker>
-          <h2 className="text-[17px] font-semibold tracking-tight mt-1">Pilih untuk RKT</h2>
-          <p className="text-xs text-zinc-500 mt-0.5">Sumber: {sumber}</p>
-        </div>
-        <Link href="/rkt" className="h-8 px-4 inline-flex items-center justify-center rounded-xl bg-[#2b5cff] text-white text-xs font-medium">Buka RKT</Link>
+        <PageHead title="Pilih untuk RKT" kicker={`Analisis — ${prio.length} prioritas`} desc={`Sumber: ${sumber}`} />
+        <Link href="/rkt" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl bg-[#2b5cff] text-white text-xs font-medium">Buka RKT</Link>
       </div>
 
       <Card className="p-3">
@@ -23,10 +20,10 @@ export default function AnalisisPage() {
           <table className="w-full text-sm">
             <thead className="bg-[#f8f7ff] text-zinc-600">
               <tr>
-                <th className="text-left px-3 py-2 font-semibold">No</th>
-                <th className="text-left px-3 py-2 font-semibold">Prioritas</th>
-                <th className="text-left px-3 py-2 font-semibold">Akar</th>
-                <th className="text-left px-3 py-2 font-semibold">Aksi</th>
+                <th scope="col" className="text-left px-3 py-2 font-semibold">No</th>
+                <th scope="col" className="text-left px-3 py-2 font-semibold">Prioritas</th>
+                <th scope="col" className="text-left px-3 py-2 font-semibold">Akar</th>
+                <th scope="col" className="text-left px-3 py-2 font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody>

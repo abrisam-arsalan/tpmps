@@ -51,7 +51,7 @@ export function DocActions({
         <div className="ml-auto flex gap-1.5">
           <Button variant="ghost" size="sm" onClick={onExportExcel}>Export Excel</Button>
           <Button variant="ghost" size="sm" onClick={onCetak}>Cetak</Button>
-          <button onClick={() => setShowInfo((v) => !v)} className="h-7 w-7 grid place-items-center rounded-full border border-[#ece9f5] bg-[#f2f0fb] text-zinc-500 hover:text-zinc-700 text-xs" aria-label="Info">
+          <button onClick={() => setShowInfo((v) => !v)} aria-expanded={showInfo} aria-label="Info alur dokumen" className="min-h-[44px] min-w-[44px] grid place-items-center rounded-full border border-[#ece9f5] bg-[#f2f0fb] text-zinc-500 hover:text-zinc-700 text-xs">
             ?
           </button>
         </div>
@@ -61,7 +61,7 @@ export function DocActions({
           Urutan: Draft — Siap Cetak — <strong className="text-emerald-700">Sah</strong> — Arsip.
         </div>
       )}
-      {disableSah && sahHint && <div className="border-t border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">{sahHint}</div>}
+      {disableSah && sahHint && <div role="note" className="border-t border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">{sahHint}</div>}
     </div>
   );
 }

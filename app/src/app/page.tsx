@@ -73,7 +73,7 @@ export default function Home() {
             <div className="text-[11px] font-medium tracking-widest uppercase text-white/70">SMP Negeri 5 Tegal</div>
             <h1 className="text-xl font-semibold tracking-tight leading-tight mt-1 text-white">Ikuti alur — satu langkah, satu dokumen.</h1>
           </div>
-          <Link href="/matriks" className="h-9 px-5 inline-flex items-center justify-center rounded-full bg-white text-[#2b5cff] text-sm font-semibold shadow-sm">
+          <Link href="/matriks" className="min-h-[44px] px-6 inline-flex items-center justify-center rounded-full bg-white text-[#2b5cff] text-sm font-semibold shadow-sm">
             Cek Keterkaitan
           </Link>
         </div>
@@ -88,11 +88,11 @@ export default function Home() {
               { label: "Arsip", href: "/rkjm/arsip", done: false },
             ].map((s, i, arr) => (
               <span key={s.label} className="inline-flex items-center gap-2">
-                <Link href={s.href} className={`h-7 px-3.5 inline-flex items-center justify-center rounded-full text-xs font-medium transition ${s.done ? "bg-white text-[#2b5cff] shadow-sm" : "bg-white/10 text-white border border-white/20 hover:bg-white/20"}`}>
-                  <span className={`h-1.5 w-1.5 rounded-full mr-1.5 ${s.done ? "bg-emerald-500" : "bg-white/40"}`} />
+                <Link href={s.href} aria-current={s.href === "/" ? (i === 0 ? "page" : undefined) : undefined} className={`min-h-[44px] px-4 inline-flex items-center justify-center rounded-full text-xs font-medium transition ${s.done ? "bg-white text-[#2b5cff] shadow-sm" : "bg-white/10 text-white border border-white/20 hover:bg-white/20"}`}>
+                  <span className={`h-1.5 w-1.5 rounded-full mr-1.5 ${s.done ? "bg-emerald-500" : "bg-white/40"}`} aria-hidden="true" />
                   {s.label}
                 </Link>
-                {i < arr.length - 1 && <span className="text-white/30 text-xs select-none">—</span>}
+                {i < arr.length - 1 && <span className="text-white/30 text-xs select-none" aria-hidden="true">—</span>}
               </span>
             ))}
           </div>
@@ -169,9 +169,9 @@ export default function Home() {
           </div>
         </div>
         <div className="flex flex-wrap gap-2 mt-4">
-          <Link href="/rapor/analisis" className="h-8 px-3.5 inline-flex items-center justify-center rounded-xl bg-[#2b5cff] text-white text-xs font-medium">Buka Analisis</Link>
-          <Link href="/rkjm" className="h-8 px-3.5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKJM</Link>
-          <Link href="/matriks" className="h-8 px-3.5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Cek Keterkaitan</Link>
+          <Link href="/rapor/analisis" className="min-h-[44px] px-4 inline-flex items-center justify-center rounded-xl bg-[#2b5cff] text-white text-xs font-medium">Buka Analisis</Link>
+          <Link href="/rkjm" className="min-h-[44px] px-4 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKJM</Link>
+          <Link href="/matriks" className="min-h-[44px] px-4 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Cek Keterkaitan</Link>
         </div>
       </Card>
     </div>

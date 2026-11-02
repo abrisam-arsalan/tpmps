@@ -6,6 +6,7 @@ import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml, escapeHtml } from "@/lib/export";
 import { db, uid, nowISO } from "@/lib/db";
 import { useRapor } from "@/lib/useRapor";
+import { PageHead } from "@/components/PageHead";
 import type { RKJM, RKT, RKTKegiatan } from "@/lib/types";
 import { RKT_MAX, TAHUN_OPSI } from "@/lib/types";
 import Link from "next/link";
@@ -91,9 +92,8 @@ export default function RKTPage() {
   if (!rkjm) {
     return (
       <div className="space-y-4">
-        <Kicker>Rencana Tahunan</Kicker>
-        <h2 className="text-[17px] font-semibold">Buat RKJM dulu</h2>
-        <Card className="p-6 text-center"><p className="text-sm text-zinc-600">RKJM belum ada</p><Link href="/rkjm" className="mt-4 inline-flex h-9 px-4 items-center justify-center rounded-xl bg-[#2b5cff] text-white text-sm">Buka RKJM</Link></Card>
+        <PageHead title="Buat RKJM dulu" kicker="Rencana Tahunan" />
+        <Card className="p-6 text-center"><p className="text-sm text-zinc-600">RKJM belum ada</p><Link href="/rkjm" className="mt-4 inline-flex min-h-[44px] px-5 items-center justify-center rounded-xl bg-[#2b5cff] text-white text-sm">Buka RKJM</Link></Card>
       </div>
     );
   }
@@ -104,16 +104,13 @@ export default function RKTPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
-        <div>
-          <Kicker>Rencana Tahunan</Kicker>
-          <h2 className="text-[17px] font-semibold tracking-tight mt-1">Tahun {tahun} — {rkt.kegiatan.length}/{RKT_MAX}</h2>
-        </div>
-        <select value={tahun} onChange={(e) => setTahun(e.target.value)} className="h-9 rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
+        <PageHead title={`Tahun ${tahun} — ${rkt.kegiatan.length}/${RKT_MAX}`} kicker="Rencana Tahunan" />
+        <label><span className="sr-only">Tahun ajaran</span><select value={tahun} onChange={(e) => setTahun(e.target.value)} aria-label="Tahun ajaran" className="min-h-[44px] rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
           {TAHUN_OPSI.map((t) => <option key={t} value={t}>{t}</option>)}
-        </select>
+        </select></label>
       </div>
 
-      {msg && <div className={`rounded-xl border px-3 py-2 text-sm ${msg.includes("Maksimal") ? "bg-amber-50 border-amber-100 text-amber-800" : "bg-emerald-50 border-emerald-100 text-emerald-800"}`}>{msg}</div>}
+      {msg && <div role="status" aria-live="polite" className={`rounded-xl border px-3 py-2 text-sm ${msg.includes("Maksimal") ? "bg-amber-50 border-amber-100 text-amber-800" : "bg-emerald-50 border-emerald-100 text-emerald-800"}`}>{msg}</div>}
       <DocActions status={rkt.status} onSiapCetak={() => persist({ ...rkt, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...rkt, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkt, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkt.scanDataUrl} sahHint={!rkt.scanDataUrl ? "Upload scan dulu" : undefined} />
 
       <div className="flex flex-wrap gap-2 items-center text-sm rounded-2xl border border-[#ece9f5] bg-white p-3">
@@ -133,7 +130,7 @@ export default function RKTPage() {
         <div className="mt-2 flex flex-wrap gap-1.5">
           <span className="text-xs text-zinc-500 self-center mr-1">1-klik dari 12 prioritas:</span>
           {prioritasDefault.map((p) => (
-            <button key={p.no} onClick={() => fillFromPrioritas(p.no)} className="rounded-full border border-[#ece9f5] bg-white px-2.5 py-1 text-xs hover:bg-[#f8f7ff]">#{p.no} {p.identifikasi_kode}</button>
+            <button key={p.no} onClick={() => fillFromPrioritas(p.no)} aria-label={`Isi dari prioritas ${p.no} ${p.identifikasi_kode}`} className="min-h-[44px] rounded-full border border-[#ece9f5] bg-white px-3.5 text-xs hover:bg-[#f8f7ff]">#{p.no} {p.identifikasi_kode}</button>
           ))}
         </div>
         <div className="mt-3 grid gap-2.5 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff] p-3">
@@ -164,7 +161,7 @@ export default function RKTPage() {
         <div className="mt-2 overflow-x-auto rounded-xl border border-[#ece9f5]">
           <table className="w-full text-sm">
             <thead className="bg-[#f8f7ff] text-zinc-600">
-              <tr><th className="text-left px-2 py-2 font-semibold">No</th><th className="text-left px-2 py-2 font-semibold">Kode</th><th className="text-left px-2 py-2 font-semibold">Akar</th><th className="text-left px-2 py-2 font-semibold">Kegiatan</th><th className="text-left px-2 py-2 font-semibold">Biaya</th><th className="px-2 py-2"></th></tr>
+              <tr><th scope="col" className="text-left px-2 py-2 font-semibold">No</th><th scope="col" className="text-left px-2 py-2 font-semibold">Kode</th><th scope="col" className="text-left px-2 py-2 font-semibold">Akar</th><th scope="col" className="text-left px-2 py-2 font-semibold">Kegiatan</th><th scope="col" className="text-left px-2 py-2 font-semibold">Biaya</th><th scope="col" className="px-2 py-2"></th></tr>
             </thead>
             <tbody>
               {rkt.kegiatan.length === 0 && <tr><td colSpan={6} className="px-3 py-6 text-center text-sm text-zinc-500">Belum ada — klik #1 sampai #12 di atas</td></tr>}
@@ -175,7 +172,7 @@ export default function RKTPage() {
                   <td className="px-2 py-2 font-mono text-xs">{k.akar_kode ?? "—"}</td>
                   <td className="px-2 py-2 text-xs max-w-[260px] leading-4">{k.kegiatan_benahi}</td>
                   <td className="px-2 py-2"><Badge tone={k.biaya === "Ya" ? "hijau" : "netral"}>{k.biaya === "Ya" ? "Ya" : "Tidak"}</Badge></td>
-                  <td className="px-2 py-2"><Button variant="ghost" size="sm" onClick={() => removeKegiatan(k.id)}>Hapus</Button></td>
+                  <td className="px-2 py-2"><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus prioritas #${k.no}?`)) return; removeKegiatan(k.id); }}>Hapus</Button></td>
                 </tr>
               ))}
             </tbody>
@@ -183,8 +180,8 @@ export default function RKTPage() {
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
           <Button variant="secondary" size="sm" onClick={() => persist(rkt, "Tersimpan")}>Simpan</Button>
-          <Link href="/rkas" className="h-8 px-4 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka Anggaran</Link>
-          <Link href="/ksp" className="h-8 px-4 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka Kurikulum</Link>
+          <Link href="/rkas" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka Anggaran</Link>
+          <Link href="/ksp" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka Kurikulum</Link>
         </div>
       </Card>
       <ScanUpload label="Scan pengesahan" currentName={rkt.scanName} currentDataUrl={rkt.scanDataUrl} onChange={(n,d)=>persist({...rkt, scanName:n, scanDataUrl:d, status: rkt.status==="Sah"?"Sah": rkt.status==="Siap Cetak"?"Menunggu Scan": rkt.status },"Scan tersimpan")} onClear={()=>persist({...rkt, scanName:null, scanDataUrl:null},"Scan dihapus")} />

@@ -56,7 +56,23 @@ a { text-underline-offset: 3px; }
   outline-offset: 2px;
 }
 
-/* Token permukaan sekunder — satukan #f8f7ff dan #fbfaf7 */
+/* Token permukaan sekunder */
 :root {
   --surface-soft: #f8f7ff;
+}
+
+/* Target sentuh minimum untuk input/select */
+:where(input, select) {
+  min-height: 44px;
+}
+:where(textarea) {
+  min-height: 44px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

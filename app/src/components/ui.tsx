@@ -41,7 +41,7 @@ export function Button({
 }: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "ghost" | "danger"; size?: "sm" | "md" | "lg"; children?: React.ReactNode }) {
   const base =
     "inline-flex items-center justify-center gap-1.5 rounded-xl font-medium leading-none tracking-tight transition active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none text-center";
-  const sizes = { sm: "h-8 px-3 text-xs", md: "h-9 px-4 text-sm", lg: "h-10 px-5 text-sm" };
+  const sizes = { sm: "min-h-[44px] px-4 text-xs", md: "min-h-[44px] px-5 text-sm", lg: "min-h-[48px] px-6 text-sm" };
   const variants = {
     primary: "bg-[#2b5cff] text-white hover:bg-[#1d4ed8] shadow-sm focus-visible:ring-[#2b5cff]",
     secondary: "bg-white border border-[#ece9f5] text-[#0f172a] hover:bg-[#f8f7ff]",
@@ -64,20 +64,9 @@ export function Progress({ value }: { value: number }) {
   );
 }
 
-export function SectionTitle({ title, subtitle, action }: { title: string; subtitle?: string; action?: React.ReactNode }) {
-  return (
-    <div className="flex flex-wrap items-start justify-between gap-3">
-      <div className="min-w-0">
-        <h2 className="text-[18px] font-semibold tracking-tight text-[#0f172a] leading-tight">{title}</h2>
-        {subtitle && <p className="text-[13px] leading-5 text-zinc-500 mt-1.5 max-w-[72ch]">{subtitle}</p>}
-      </div>
-      {action && <div className="shrink-0 flex items-center gap-2">{action}</div>}
-    </div>
-  );
-}
 
 export function Kicker({ children }: { children: React.ReactNode }) {
-  return <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-zinc-500">{children}</div>;
+  return <span className="block text-[11px] font-semibold tracking-[0.14em] uppercase text-zinc-500">{children}</span>;
 }
 
 export function Stat({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) {
@@ -90,11 +79,22 @@ export function Stat({ label, value, hint }: { label: string; value: React.React
   );
 }
 
-// Ikon kecil untuk nav — emoji minimal
-export function NavIcon({ active, children }: { active: boolean; children: React.ReactNode }) {
+// Ikon SVG satu gaya — garis 1.8px, sudut bulat
+const ICON_PATHS: Record<string, React.ReactNode> = {
+  home: (<><path d="M3 10.5 12 3l9 7.5" /><path d="M5 9.5V20h5v-6h4v6h5V9.5" /></>),
+  chart: (<><path d="M4 20h16" /><path d="M7 20v-5M12 20V7M17 20v-8" /></>),
+  layers: (<><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="m3 13 9 5 9-5" /></>),
+  list: (<><path d="M8 6h13M8 12h13M8 18h13" /><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01" /></>),
+  banknote: (<><rect x="3" y="7" width="18" height="10" rx="2" /><circle cx="12" cy="12" r="2.5" /><path d="M6.5 10.5h.01M17.5 13.5h.01" /></>),
+  book: (<><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z" /><path d="M4 19a2 2 0 0 1 2-2h13" /></>),
+  link: (<><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1.5 1.5" /><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1.5-1.5" /></>),
+  archive: (<><rect x="3" y="4" width="18" height="5" rx="1" /><path d="M5 9v11h14V9" /><path d="M10 13h4" /></>),
+};
+
+export function Icon({ name, className = "h-5 w-5" }: { name: string; className?: string }) {
   return (
-    <span className={`h-6 w-6 grid place-items-center rounded-lg text-xs ${active ? "bg-[#2b5cff] text-white" : "bg-[#f2f0fb] text-zinc-500"}`}>
-      {children}
-    </span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true" focusable="false">
+      {ICON_PATHS[name] ?? ICON_PATHS.chart}
+    </svg>
   );
 }

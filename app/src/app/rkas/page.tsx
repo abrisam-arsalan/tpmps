@@ -8,6 +8,7 @@ import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
 import type { RKAS, RkasBaris, RKT } from "@/lib/types";
 import { TAHUN_OPSI } from "@/lib/types";
+import { PageHead } from "@/components/PageHead";
 import arkasRef from "@/data/arkas-2026-reference.json";
 
 const TAHUN = TAHUN_OPSI;
@@ -80,9 +81,8 @@ export default function RKASPage() {
   if (!rkt) {
     return (
       <div className="space-y-3">
-        <Kicker>Anggaran</Kicker>
-        <h2 className="text-[17px] font-semibold">Buat Rencana Tahunan dulu</h2>
-        <Card className="p-6 text-center"><p className="text-sm text-zinc-600">Belum ada Rencana Tahunan {tahun}.</p><Link href="/rkt" className="mt-3 inline-flex h-9 px-4 items-center justify-center rounded-xl bg-[#2b5cff] text-white text-sm font-medium">Buka Rencana Tahunan</Link></Card>
+        <PageHead title="Buat Rencana Tahunan dulu" kicker="Anggaran" />
+        <Card className="p-6 text-center"><p className="text-sm text-zinc-600">Belum ada Rencana Tahunan {tahun}.</p><Link href="/rkt" className="mt-3 inline-flex min-h-[44px] px-5 items-center justify-center rounded-xl bg-[#2b5cff] text-white text-sm font-medium">Buka Rencana Tahunan</Link></Card>
       </div>
     );
   }
@@ -91,16 +91,13 @@ export default function RKASPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
-        <div>
-          <Kicker>Anggaran</Kicker>
-          <h2 className="text-[17px] font-semibold tracking-tight mt-1">Tahun {tahun}</h2>
-        </div>
-        <select value={tahun} onChange={(e) => setTahun(e.target.value)} className="h-9 rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
+        <PageHead title={`Tahun ${tahun}`} kicker="Anggaran" />
+        <label><span className="sr-only">Tahun ajaran</span><select value={tahun} onChange={(e) => setTahun(e.target.value)} aria-label="Tahun ajaran" className="min-h-[44px] rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
           {TAHUN.map((t) => <option key={t} value={t}>{t}</option>)}
-        </select>
+        </select></label>
       </div>
 
-      {msg && <div className="rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-2 text-xs">{msg}</div>}
+      {msg && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-2 text-xs">{msg}</div>}
       <DocActions status={rkas.status} onSiapCetak={() => persist({ ...rkas, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...rkas, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkas, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkas.scanDataUrl} sahHint={!rkas.scanDataUrl ? "Upload scan dulu" : undefined} />
 
       <div className="grid grid-cols-3 gap-3">
@@ -151,7 +148,7 @@ export default function RKASPage() {
         <Kicker>Daftar belanja</Kicker>
         <table className="w-full text-sm mt-2 border border-[#ece9f5] rounded-xl overflow-hidden">
           <thead className="bg-[#f8f7ff] text-zinc-600">
-            <tr><th className="px-2 py-2 text-left font-semibold">No</th><th className="px-2 py-2 text-left font-semibold">Kegiatan</th><th className="px-2 py-2 text-left font-semibold">Uraian</th><th className="px-2 py-2 font-semibold">Bulan</th><th className="px-2 py-2 text-right font-semibold">Total</th><th></th></tr>
+            <tr><th scope="col" className="px-2 py-2 text-left font-semibold">No</th><th scope="col" className="px-2 py-2 text-left font-semibold">Kegiatan</th><th scope="col" className="px-2 py-2 text-left font-semibold">Uraian</th><th scope="col" className="px-2 py-2 font-semibold">Bulan</th><th scope="col" className="px-2 py-2 text-right font-semibold">Total</th><th></th></tr>
           </thead>
           <tbody>
             {rkas.baris.length === 0 && <tr><td colSpan={6} className="px-3 py-6 text-center text-sm text-zinc-500">Belum ada baris</td></tr>}
@@ -162,7 +159,7 @@ export default function RKASPage() {
                 <td className="px-2 py-2 text-xs max-w-[180px]">{b.uraian_kegiatan}</td>
                 <td className="px-2 py-2 text-xs text-center">{b.bulan}</td>
                 <td className="px-2 py-2 text-right tabular-nums text-xs font-medium">{fmtRp(b.total)}</td>
-                <td className="px-2 py-2"><Button variant="ghost" size="sm" onClick={() => removeBaris(b.id)}>Hapus</Button></td>
+                <td className="px-2 py-2"><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus "${b.uraian_kegiatan.slice(0, 40)}"?`)) return; removeBaris(b.id); }}>Hapus</Button></td>
               </tr>
             ))}
           </tbody>
@@ -171,7 +168,7 @@ export default function RKASPage() {
       </Card>
 
       <details className="card-paper rounded-2xl p-3">
-        <summary className="cursor-pointer list-none flex items-center justify-between">
+        <summary className="cursor-pointer list-none flex items-center justify-between min-h-[44px]">
           <span className="text-xs font-semibold tracking-wide uppercase text-zinc-500">Acuan ARKAS 2026</span>
           <span className="text-xs text-zinc-500">Lihat</span>
         </summary>

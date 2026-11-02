@@ -7,6 +7,7 @@ import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
 import { db, uid, nowISO } from "@/lib/db";
 import { useRapor } from "@/lib/useRapor";
+import { PageHead } from "@/components/PageHead";
 import type { RKJM, RKJMSasaran, RKJMProgram } from "@/lib/types";
 
 const PERIODE = "2026-2030";
@@ -86,14 +87,11 @@ export default function RKJMPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
-        <div>
-          <Kicker>Rencana Jangka Menengah — RKJM</Kicker>
-          <h2 className="text-[17px] font-semibold tracking-tight mt-1">Visi, Misi, dan Sasaran</h2>
-        </div>
-        <Link href="/rkt" className="h-8 px-4 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKT</Link>
+        <PageHead title="Visi, Misi, dan Sasaran" kicker="Rencana Jangka Menengah — RKJM" />
+        <Link href="/rkt" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKT</Link>
       </div>
 
-      {saveMsg && <div className="rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-2 text-xs">{saveMsg}</div>}
+      {saveMsg && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-2 text-xs">{saveMsg}</div>}
       <DocActions status={rkjm.status} onSiapCetak={() => save({ ...rkjm, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => save({ ...rkjm, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => save({ ...rkjm, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkjm.scanDataUrl} sahHint={!rkjm.scanDataUrl ? "Upload scan dulu" : undefined} />
 
       <Card className="p-4 space-y-3">
@@ -135,7 +133,7 @@ export default function RKJMPage() {
               <span className="font-mono text-xs font-medium">{s.kode}</span>
               <span className="text-xs flex-1 truncate">{s.judul} <Badge className="ml-1">{s.indikator_rapor_kode}</Badge></span>
               <span className="text-xs text-zinc-500 hidden sm:inline">{s.target["2029/2030"]} · {s.penanggung_jawab}</span>
-              <Button variant="ghost" size="sm" onClick={() => removeSasaran(s.id)}>Hapus</Button>
+              <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus sasaran "${s.judul.slice(0, 40)}"?`)) return; removeSasaran(s.id); }}>Hapus</Button>
             </div>
           ))}
         </div>
@@ -150,7 +148,7 @@ export default function RKJMPage() {
         </div>
         <div className="mt-2 space-y-1.5">
           {rkjm.program.length === 0 && <div className="text-xs text-zinc-500 py-2 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada program.</div>}
-          {rkjm.program.map((p) => <div key={p.id} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2"><div className="text-xs font-medium">{p.nama}</div>{p.strategi && <div className="text-xs text-zinc-500 mt-0.5">{p.strategi}</div>}</div>)}
+          {rkjm.program.map((p) => <div key={p.id} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 flex gap-2 items-center"><div className="flex-1 min-w-0"><div className="text-xs font-medium">{p.nama}</div>{p.strategi && <div className="text-xs text-zinc-500 mt-0.5">{p.strategi}</div>}</div><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus program "${p.nama.slice(0, 40)}"?`)) return; save({ ...rkjm, program: rkjm.program.filter((x) => x.id !== p.id) }, "Dihapus."); }}>Hapus</Button></div>)}
         </div>
         <label className="block mt-3">
           <span className="text-xs font-medium text-zinc-700">MONEV</span>
@@ -158,7 +156,7 @@ export default function RKJMPage() {
         </label>
         <div className="mt-2 flex gap-2">
           <Button size="sm" onClick={() => save(rkjm)}>Simpan</Button>
-          <Link href="/rkt" className="h-8 px-4 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKT</Link>
+          <Link href="/rkt" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKT</Link>
         </div>
       </Card>
 

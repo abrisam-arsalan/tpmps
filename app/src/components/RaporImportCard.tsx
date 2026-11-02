@@ -32,7 +32,7 @@ export function RaporImportCard({ onImported }: { onImported?: (p: ParsedRapor) 
         <Button variant="secondary" size="sm" onClick={() => inputRef.current?.click()} disabled={busy}>{busy ? "Memproses" : "Pilih file"}</Button>
       </div>
       <input ref={inputRef} type="file" accept=".xlsx,.xls" className="hidden" onChange={(e) => handleFile(e.target.files?.[0] ?? null)} />
-      {msg && <div className={`mt-2 rounded-xl border px-3 py-2 text-xs ${msg.startsWith("Berhasil") ? "bg-emerald-50 border-emerald-100 text-emerald-800" : "bg-amber-50 border-amber-100 text-amber-800"}`}>{msg}</div>}
+      {msg && <div role="status" aria-live="polite" className={`mt-2 rounded-xl border px-3 py-2 text-xs ${msg.startsWith("Berhasil") ? "bg-emerald-50 border-emerald-100 text-emerald-800" : "bg-amber-50 border-amber-100 text-amber-800"}`}>{msg}</div>}
     </Card>
   );
 }

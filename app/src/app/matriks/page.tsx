@@ -4,6 +4,7 @@ import { db, fmtRp } from "@/lib/db";
 import { Badge, Button, Card, Kicker } from "@/components/ui";
 import { buildTrace, healthCheck } from "@/lib/trace";
 import { useRapor } from "@/lib/useRapor";
+import { PageHead } from "@/components/PageHead";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
 import type { RKJM, RKT, RKAS, KSP } from "@/lib/types";
 import { TAHUN_OPSI } from "@/lib/types";
@@ -64,14 +65,11 @@ export default function KeterkaitanPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
-        <div>
-          <Kicker>Keterkaitan</Kicker>
-          <h2 className="text-[17px] font-semibold tracking-tight mt-1">Tahun {tahun}</h2>
-        </div>
+        <PageHead title={`Tahun ${tahun}`} kicker="Keterkaitan" />
         <div className="flex gap-2">
-          <select value={tahun} onChange={(e) => setTahun(e.target.value)} className="h-9 rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
+          <label><span className="sr-only">Tahun ajaran</span><select value={tahun} onChange={(e) => setTahun(e.target.value)} aria-label="Tahun ajaran" className="min-h-[44px] rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
             {TA.map((t) => <option key={t} value={t}>{t}</option>)}
-          </select>
+          </select></label>
           <Button variant="secondary" size="sm" onClick={doExport}>Export Excel</Button>
           <Button size="sm" onClick={doCetak}>Cetak</Button>
         </div>
@@ -83,18 +81,32 @@ export default function KeterkaitanPage() {
         </Card>
       ) : (
         <>
-          <Card className="p-3 overflow-x-auto">
+          <Card className="p-3">
             <Kicker>Daftar keterkaitan</Kicker>
+            <div className="mt-2 space-y-1.5 sm:hidden" role="list" aria-label="Keterkaitan">
+              {rows.map((r) => (
+                <div key={r.no} role="listitem" className={`rounded-xl border border-[#ece9f5] bg-white px-3 py-2.5 ${r.status === "merah" ? "bg-red-50" : r.status === "warn" ? "bg-amber-50/50" : ""}`}>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-mono text-xs font-medium">#{r.no} {r.raporKode}</span>
+                    <span className="ml-auto"><Badge tone={r.status === "ok" ? "hijau" : r.status === "warn" ? "kuning" : "merah"}>{r.status === "ok" ? "Lengkap" : r.status === "warn" ? "Lengkapi" : "Perbaiki"}</Badge></span>
+                  </div>
+                  <div className="text-xs text-zinc-600 mt-1 leading-4">{r.rktKegiatan?.slice(0, 80) ?? "—"}</div>
+                  <div className="text-xs text-zinc-500 mt-1">{r.rkjmSasaran ? `Sasaran ${r.rkjmSasaran}` : "Belum taut sasaran"} · {r.rkasTotal != null ? fmtRp(r.rkasTotal) : "Tanpa anggaran"} · KSP {r.kspTaut ? "taut" : "belum"}</div>
+                  {r.hint !== "Lengkap." && <div className="text-xs text-amber-700 mt-0.5">{r.hint}</div>}
+                </div>
+              ))}
+            </div>
+            <div className="overflow-x-auto hidden sm:block">
             <table className="w-full text-sm mt-2 border border-[#ece9f5] rounded-xl overflow-hidden">
               <thead className="bg-[#f8f7ff] text-zinc-600">
                 <tr>
-                  <th className="px-2 py-2 text-left font-semibold">No</th>
-                  <th className="px-2 py-2 text-left font-semibold">Rapor</th>
-                  <th className="px-2 py-2 text-left font-semibold">Sasaran</th>
-                  <th className="px-2 py-2 text-left font-semibold">RKT</th>
-                  <th className="px-2 py-2 text-left font-semibold">Anggaran</th>
-                  <th className="px-2 py-2 font-semibold">KSP</th>
-                  <th className="px-2 py-2 font-semibold">Status</th>
+                  <th scope="col" className="px-2 py-2 text-left font-semibold">No</th>
+                  <th scope="col" className="px-2 py-2 text-left font-semibold">Rapor</th>
+                  <th scope="col" className="px-2 py-2 text-left font-semibold">Sasaran</th>
+                  <th scope="col" className="px-2 py-2 text-left font-semibold">RKT</th>
+                  <th scope="col" className="px-2 py-2 text-left font-semibold">Anggaran</th>
+                  <th scope="col" className="px-2 py-2 font-semibold">KSP</th>
+                  <th scope="col" className="px-2 py-2 font-semibold">Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -106,11 +118,12 @@ export default function KeterkaitanPage() {
                     <td className="px-2 py-2 text-xs max-w-[180px] truncate">{r.rktKegiatan?.slice(0, 36)}</td>
                     <td className="px-2 py-2 text-xs">{r.rkasTotal != null ? <span className="font-medium tabular-nums">{fmtRp(r.rkasTotal)}</span> : <span className="text-zinc-500">—</span>}</td>
                     <td className="px-2 py-2 text-center">{r.kspTaut ? <Badge tone="hijau">Ya</Badge> : <Badge tone="netral">Tidak</Badge>}</td>
-                    <td className="px-2 py-2"><Badge tone={r.status === "ok" ? "hijau" : r.status === "warn" ? "kuning" : "merah"}>{r.status}</Badge></td>
+                    <td className="px-2 py-2"><Badge tone={r.status === "ok" ? "hijau" : r.status === "warn" ? "kuning" : "merah"}>{r.status === "ok" ? "Lengkap" : r.status === "warn" ? "Lengkapi" : "Perbaiki"}</Badge></td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            </div>
             <p className="text-xs text-zinc-500 mt-2">Tanpa biaya tetap dihitung.</p>
           </Card>
 
