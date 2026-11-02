@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import { db, fmtRp } from "@/lib/db";
 import { Badge, Button, Card, Kicker } from "@/components/ui";
@@ -99,19 +99,19 @@ export default function KeterkaitanPage() {
               </thead>
               <tbody>
                 {rows.map((r) => (
-                  <tr key={r.no} className={`border-t border-[#f0ebe0] ${r.status === "merah" ? "bg-red-50" : r.status === "warn" ? "bg-amber-50/50" : ""}`}>
+                  <tr key={r.no} className={`border-t border-[#ece9f5] ${r.status === "merah" ? "bg-red-50" : r.status === "warn" ? "bg-amber-50/50" : ""}`}>
                     <td className="px-2 py-2 font-mono text-xs">{r.no}</td>
-                    <td className="px-2 py-2"><div className="font-mono text-xs font-medium">{r.raporKode}</div><div className="text-xs text-zinc-400">{r.skor2025 ?? "—"}</div></td>
+                    <td className="px-2 py-2"><div className="font-mono text-xs font-medium">{r.raporKode}</div><div className="text-xs text-zinc-500">{r.skor2025 ?? "—"}</div></td>
                     <td className="px-2 py-2 text-xs">{r.rkjmSasaran ?? <span className="text-amber-600">—</span>}</td>
                     <td className="px-2 py-2 text-xs max-w-[180px] truncate">{r.rktKegiatan?.slice(0, 36)}</td>
-                    <td className="px-2 py-2 text-xs">{r.rkasTotal != null ? <span className="font-medium tabular-nums">{fmtRp(r.rkasTotal)}</span> : <span className="text-zinc-400">—</span>}</td>
+                    <td className="px-2 py-2 text-xs">{r.rkasTotal != null ? <span className="font-medium tabular-nums">{fmtRp(r.rkasTotal)}</span> : <span className="text-zinc-500">—</span>}</td>
                     <td className="px-2 py-2 text-center">{r.kspTaut ? <Badge tone="hijau">Ya</Badge> : <Badge tone="netral">Tidak</Badge>}</td>
                     <td className="px-2 py-2"><Badge tone={r.status === "ok" ? "hijau" : r.status === "warn" ? "kuning" : "merah"}>{r.status}</Badge></td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p className="text-xs text-zinc-400 mt-2">Tanpa biaya tetap dihitung.</p>
+            <p className="text-xs text-zinc-500 mt-2">Tanpa biaya tetap dihitung.</p>
           </Card>
 
           <Card className="p-3">

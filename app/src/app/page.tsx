@@ -1,8 +1,8 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRapor, useRaporCount } from "@/lib/useRapor";
-import { Badge, Card, Kicker, Progress, Stat } from "@/components/ui";
+import { Card, Kicker, Progress, Stat } from "@/components/ui";
 import { RaporImportCard } from "@/components/RaporImportCard";
 import { db } from "@/lib/db";
 import { healthCheck } from "@/lib/trace";
@@ -107,7 +107,7 @@ export default function Home() {
           <div className="text-[11px] font-medium tracking-wide uppercase text-zinc-500">Kelengkapan</div>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="text-xl font-semibold tracking-tight">{health.done}/{health.total}</span>
-            <span className="text-xs text-zinc-400">{health.pct}%</span>
+            <span className="text-xs text-zinc-500">{health.pct}%</span>
           </div>
           <Progress value={health.pct} />
         </div>
@@ -140,7 +140,7 @@ export default function Home() {
           <div className="card-paper p-4">
             <div className="text-xs font-semibold tracking-wide uppercase text-zinc-500">Alur</div>
             <p className="text-[13px] leading-5 text-zinc-600 mt-1.5">Rapor → RKJM → RKT → RKAS → Kurikulum.</p>
-            <p className="text-xs text-zinc-400 mt-1">Cetak manual, arsip tetap ada.</p>
+            <p className="text-xs text-zinc-500 mt-1">Cetak manual, arsip tetap ada.</p>
           </div>
         </div>
       </div>

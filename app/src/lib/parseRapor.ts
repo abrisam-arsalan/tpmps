@@ -32,7 +32,7 @@ export async function parseRaporFile(file: File): Promise<ParsedRapor> {
   const wb = XLSX.read(buf, { type: "array" });
 
   // fallback: cari sheet yang mengandung "LAPORAN RAPOR" atau "2."
-  let sheetName = wb.SheetNames.find((n) => n.includes("LAPORAN RAPOR")) ?? wb.SheetNames[1];
+  const sheetName = wb.SheetNames.find((n) => n.includes("LAPORAN RAPOR")) ?? wb.SheetNames[1];
   if (!sheetName) throw new Error("Sheet '2. LAPORAN RAPOR' tidak ditemukan.");
 
   const ws = wb.Sheets[sheetName];

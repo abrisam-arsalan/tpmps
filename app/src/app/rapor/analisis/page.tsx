@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { useRapor } from "@/lib/useRapor";
 import { Card, Kicker } from "@/components/ui";
@@ -31,7 +31,7 @@ export default function AnalisisPage() {
             </thead>
             <tbody>
               {prio.map((p) => (
-                <tr key={p.no} className="border-t border-[#f0ebe0] align-top">
+                <tr key={p.no} className="border-t border-[#ece9f5] align-top">
                   <td className="px-3 py-2.5 font-mono text-xs">{p.no}</td>
                   <td className="px-3 py-2.5"><div className="text-xs font-medium">{p.identifikasi_kode}</div></td>
                   <td className="px-3 py-2.5"><div className="text-xs font-medium">{p.akar_lv2_kode ?? "—"}</div><div className="text-xs text-zinc-500 leading-4 max-w-[260px]">{p.akar_deskripsi ?? "—"}</div></td>

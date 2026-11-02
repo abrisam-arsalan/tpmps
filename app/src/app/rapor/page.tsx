@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useMemo, useState } from "react";
 import { flagForIndikator, peringkatBadge, perubahanBadge } from "@/lib/rapor";
 import { useRapor } from "@/lib/useRapor";
@@ -55,7 +55,7 @@ export default function RaporPage() {
         </div>
         <div className="mt-3 flex gap-2">
           <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari indikator" className="flex-1 h-9 rounded-xl border border-[#ece9f5] bg-white px-3 text-sm placeholder:text-zinc-400" />
-          <span className="hidden sm:inline-flex items-center justify-center text-xs text-zinc-400 border border-[#ece9f5] rounded-full px-2.5 bg-[#f8f7ff]">{rows.length}</span>
+          <span className="hidden sm:inline-flex items-center justify-center text-xs text-zinc-500 border border-[#ece9f5] rounded-full px-2.5 bg-[#f8f7ff]">{rows.length}</span>
         </div>
 
         <div className="mt-3 overflow-x-auto rounded-xl border border-[#ece9f5]">
@@ -77,7 +77,7 @@ export default function RaporPage() {
                 const pNas = peringkatBadge(r.peringkat_nas);
                 const ubah = perubahanBadge(r.perubahan);
                 return (
-                  <tr key={`${r.kode}-${r.nama.slice(0, 12)}`} className={`border-t border-[#f0ebe0] ${flag === "merah" ? "bg-red-50/50" : flag === "kuning" ? "bg-amber-50/40" : ""}`}>
+                  <tr key={`${r.kode}-${r.nama.slice(0, 12)}`} className={`border-t border-[#ece9f5] ${flag === "merah" ? "bg-red-50/50" : flag === "kuning" ? "bg-amber-50/40" : ""}`}>
                     <td className="px-3 py-2.5 font-mono text-xs whitespace-nowrap">
                       <span className="inline-flex items-center justify-center gap-1.5">
                         <span className={`h-1.5 w-1.5 rounded-full ${flag === "merah" ? "bg-red-500" : flag === "kuning" ? "bg-amber-500" : flag === "hijau" ? "bg-emerald-500" : "bg-zinc-300"}`} />

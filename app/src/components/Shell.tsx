@@ -1,7 +1,7 @@
-"use client";
+﻿"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Bottom nav — hanya 4 tab utama + FAB RKT di tengah
 // Kiri: Beranda, Rapor | Kanan: KSP, Arsip — RKJM diakses via Beranda/Rapor
@@ -30,7 +30,6 @@ const BOTTOM_RIGHT: typeof NAV = [
 export function Shell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  useEffect(() => { setOpen(false); }, [pathname]);
   return (
     <div className="min-h-screen bg-[#f2f0fb] text-[#0f172a]">
       {/* Top bar */}
@@ -40,7 +39,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             <div className="h-8 w-8 rounded-xl bg-[#2b5cff] text-white grid place-items-center font-bold text-xs shrink-0">S5</div>
             <div className="leading-tight min-w-0">
               <div className="font-semibold tracking-tight text-[14px] leading-none truncate">SMP Negeri 5 Tegal</div>
-              <div className="text-[11px] text-zinc-400">NPSN 20329830</div>
+              <div className="text-[11px] text-zinc-500">NPSN 20329830</div>
             </div>
           </Link>
           <div className="flex items-center gap-2 shrink-0">
@@ -94,7 +93,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
           {BOTTOM_LEFT.map((n) => {
             const active = pathname === n.href || (n.href !== "/" && pathname.startsWith(n.href));
             return (
-              <Link key={n.href} href={n.href} className={`flex flex-col items-center justify-center gap-0.5 px-4 py-1.5 rounded-xl min-w-[56px] ${active ? "text-[#2b5cff]" : "text-zinc-400"}`}>
+              <Link key={n.href} href={n.href} className={`flex flex-col items-center justify-center gap-0.5 px-4 py-1.5 rounded-xl min-w-[56px] ${active ? "text-[#2b5cff]" : "text-zinc-500"}`}>
                 <span className="text-[16px] leading-none" aria-hidden>
                   {n.icon}
                 </span>
@@ -107,11 +106,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
             +
           </Link>
           {BOTTOM_RIGHT.map((n) => {
-            const active = pathname === n.href || (n.href !== "/" && pathname.startsWith(n.href));
             // Arsip href is /rkjm/arsip — treat as startsWith
             const isActive = n.href === "/rkjm/arsip" ? pathname.startsWith("/rkjm/arsip") : pathname === n.href || (n.href !== "/" && pathname.startsWith(n.href));
             return (
-              <Link key={n.href} href={n.href} className={`flex flex-col items-center justify-center gap-0.5 px-4 py-1.5 rounded-xl min-w-[56px] ${isActive ? "text-[#2b5cff]" : "text-zinc-400"}`}>
+              <Link key={n.href} href={n.href} className={`flex flex-col items-center justify-center gap-0.5 px-4 py-1.5 rounded-xl min-w-[56px] ${isActive ? "text-[#2b5cff]" : "text-zinc-500"}`}>
                 <span className="text-[16px] leading-none" aria-hidden>
                   {n.icon}
                 </span>
@@ -122,7 +120,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </nav>
 
-      <footer className="mx-auto max-w-[1280px] px-4 sm:px-6 py-6 text-xs text-zinc-400 hidden lg:block">
+      <footer className="mx-auto max-w-[1280px] px-4 sm:px-6 py-6 text-xs text-zinc-500 hidden lg:block">
         <div className="border-t border-[#ece9f5] pt-4 flex flex-wrap gap-3 justify-between">
           <span>SMP Negeri 5 Tegal · RKJM 2026–2030 · Rapor 2025 · ARKAS 2026 Rp 628,28jt</span>
           <span>Cetak manual + arsip permanen</span>

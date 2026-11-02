@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useMemo, useState } from "react";
 import { Badge, Button, Card, Kicker } from "@/components/ui";
 import { DocActions } from "@/components/DocActions";
@@ -119,41 +119,41 @@ export default function RKTPage() {
       <div className="flex flex-wrap gap-2 items-center text-sm rounded-2xl border border-[#ece9f5] bg-white p-3">
         <Badge tone={rkt.kegiatan.length >= RKT_MAX ? "merah" : rkt.kegiatan.length >= 10 ? "kuning" : "hijau"}>{rkt.kegiatan.length}/{RKT_MAX}</Badge>
         <span className="text-zinc-600">Butuh anggaran <strong className="text-zinc-900">{biayaYa}</strong> · Tanpa biaya: {rkt.kegiatan.length - biayaYa}</span>
-        <span className="ml-auto text-xs text-zinc-400">{rkjm.sasaran.length} sasaran RKJM</span>
+        <span className="ml-auto text-xs text-zinc-500">{rkjm.sasaran.length} sasaran RKJM</span>
       </div>
 
       <Card className="p-4 space-y-3">
         <Kicker>Evaluasi tahun lalu</Kicker>
-        <textarea value={rkt.evaluasi_lalu} onChange={(e) => setRkt({ ...rkt, evaluasi_lalu: e.target.value })} rows={2} placeholder="Capaian tahun lalu, kendala, tindak lanjut" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+        <label className="block"><span className="sr-only">Evaluasi tahun lalu</span><textarea value={rkt.evaluasi_lalu} onChange={(e) => setRkt({ ...rkt, evaluasi_lalu: e.target.value })} rows={2} placeholder="Capaian tahun lalu, kendala, tindak lanjut" aria-label="Evaluasi tahun lalu" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
         <Button size="sm" onClick={() => persist(rkt, "Evaluasi tersimpan")}>Simpan evaluasi</Button>
       </Card>
 
       <Card className="p-4">
         <Kicker>Tambah prioritas</Kicker>
         <div className="mt-2 flex flex-wrap gap-1.5">
-          <span className="text-xs text-zinc-400 self-center mr-1">1-klik dari 12 prioritas:</span>
+          <span className="text-xs text-zinc-500 self-center mr-1">1-klik dari 12 prioritas:</span>
           {prioritasDefault.map((p) => (
             <button key={p.no} onClick={() => fillFromPrioritas(p.no)} className="rounded-full border border-[#ece9f5] bg-white px-2.5 py-1 text-xs hover:bg-[#f8f7ff]">#{p.no} {p.identifikasi_kode}</button>
           ))}
         </div>
         <div className="mt-3 grid gap-2.5 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff] p-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <select value={form.identifikasi} onChange={(e) => setForm({ ...form, identifikasi: e.target.value })} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
+            <label className="block"><span className="sr-only">Indikator</span><select value={form.identifikasi} onChange={(e) => setForm({ ...form, identifikasi: e.target.value })} aria-label="Indikator" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
               {indikatorOpts.map((o) => <option key={o.kode} value={o.kode}>{o.kode} — {o.nama.slice(0, 36)}</option>)}
-            </select>
-            <input value={form.akar} onChange={(e) => setForm({ ...form, akar: e.target.value })} placeholder="Akar" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-            <select value={form.sasaran} onChange={(e) => setForm({ ...form, sasaran: e.target.value })} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
+            </select></label>
+            <label className="block"><span className="sr-only">Akar</span><input value={form.akar} onChange={(e) => setForm({ ...form, akar: e.target.value })} placeholder="Akar" aria-label="Akar" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+            <label className="block"><span className="sr-only">Sasaran RKJM</span><select value={form.sasaran} onChange={(e) => setForm({ ...form, sasaran: e.target.value })} aria-label="Sasaran RKJM" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
               <option value="">Taut sasaran RKJM</option>
               {rkjm.sasaran.map((s) => <option key={s.id} value={s.id}>{s.kode}: {s.judul.slice(0, 40)}</option>)}
-            </select>
+            </select></label>
           </div>
-          <input value={form.benahi} onChange={(e) => setForm({ ...form, benahi: e.target.value })} placeholder="Kegiatan — 1 kalimat" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-          <textarea value={form.penjelasan} onChange={(e) => setForm({ ...form, penjelasan: e.target.value })} placeholder="Penjelasan — rincian singkat" rows={2} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <label className="block"><span className="sr-only">Kegiatan</span><input value={form.benahi} onChange={(e) => setForm({ ...form, benahi: e.target.value })} placeholder="Kegiatan — 1 kalimat" aria-label="Kegiatan" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+          <label className="block"><span className="sr-only">Penjelasan</span><textarea value={form.penjelasan} onChange={(e) => setForm({ ...form, penjelasan: e.target.value })} placeholder="Penjelasan — rincian singkat" aria-label="Penjelasan" rows={2} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
           <div className="flex gap-2 items-center flex-wrap">
-            <select value={form.biaya} onChange={(e) => setForm({ ...form, biaya: e.target.value as "Ya" | "Tidak" })} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
+            <label className="block"><span className="sr-only">Biaya</span><select value={form.biaya} onChange={(e) => setForm({ ...form, biaya: e.target.value as "Ya" | "Tidak" })} aria-label="Biaya" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
               <option value="Ya">Butuh anggaran</option>
               <option value="Tidak">Tanpa biaya</option>
-            </select>
+            </select></label>
             <Button onClick={addKegiatan} disabled={rkt.kegiatan.length >= RKT_MAX}>Tambah</Button>
           </div>
         </div>
@@ -167,9 +167,9 @@ export default function RKTPage() {
               <tr><th className="text-left px-2 py-2 font-semibold">No</th><th className="text-left px-2 py-2 font-semibold">Kode</th><th className="text-left px-2 py-2 font-semibold">Akar</th><th className="text-left px-2 py-2 font-semibold">Kegiatan</th><th className="text-left px-2 py-2 font-semibold">Biaya</th><th className="px-2 py-2"></th></tr>
             </thead>
             <tbody>
-              {rkt.kegiatan.length === 0 && <tr><td colSpan={6} className="px-3 py-6 text-center text-sm text-zinc-400">Belum ada — klik #1 sampai #12 di atas</td></tr>}
+              {rkt.kegiatan.length === 0 && <tr><td colSpan={6} className="px-3 py-6 text-center text-sm text-zinc-500">Belum ada — klik #1 sampai #12 di atas</td></tr>}
               {rkt.kegiatan.map((k) => (
-                <tr key={k.id} className="border-t border-[#f0ebe0]">
+                <tr key={k.id} className="border-t border-[#ece9f5]">
                   <td className="px-2 py-2 font-mono text-xs">{k.no}</td>
                   <td className="px-2 py-2 font-mono text-xs">{k.identifikasi_kode}</td>
                   <td className="px-2 py-2 font-mono text-xs">{k.akar_kode ?? "—"}</td>

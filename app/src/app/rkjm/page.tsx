@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Badge, Button, Card, Kicker } from "@/components/ui";
@@ -98,18 +98,18 @@ export default function RKJMPage() {
 
       <Card className="p-4 space-y-3">
         <div className="flex gap-2 items-center"><Badge tone="hijau">Periode {PERIODE}</Badge><Badge>{rkjm.status}</Badge></div>
-        <div>
-          <div className="text-xs font-medium text-zinc-700">Visi</div>
+        <label className="block">
+          <span className="text-xs font-medium text-zinc-700">Visi</span>
           <textarea value={rkjm.visi} onChange={(e) => setRkjm({ ...rkjm, visi: e.target.value })} rows={2} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-        </div>
-        <div>
-          <div className="text-xs font-medium text-zinc-700">Misi — satu per baris</div>
+        </label>
+        <label className="block">
+          <span className="text-xs font-medium text-zinc-700">Misi — satu per baris</span>
           <textarea value={rkjm.misi.join("\n")} onChange={(e) => setRkjm({ ...rkjm, misi: e.target.value.split("\n") })} rows={3} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-        </div>
-        <div>
-          <div className="text-xs font-medium text-zinc-700">Tujuan</div>
+        </label>
+        <label className="block">
+          <span className="text-xs font-medium text-zinc-700">Tujuan</span>
           <input value={rkjm.tujuan} onChange={(e) => setRkjm({ ...rkjm, tujuan: e.target.value })} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-        </div>
+        </label>
         <Button size="sm" onClick={() => save(rkjm)}>Simpan</Button>
       </Card>
 
@@ -117,24 +117,24 @@ export default function RKJMPage() {
         <Kicker>Sasaran</Kicker>
         <div className="mt-2 grid gap-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff] p-3">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-            <input value={sasaranForm.judul} onChange={(e) => setSasaranForm({ ...sasaranForm, judul: e.target.value })} placeholder="Judul sasaran" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-            <select value={sasaranForm.indikator} onChange={(e) => setSasaranForm({ ...sasaranForm, indikator: e.target.value })} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
+            <label className="block"><span className="sr-only">Judul sasaran</span><input value={sasaranForm.judul} onChange={(e) => setSasaranForm({ ...sasaranForm, judul: e.target.value })} placeholder="Judul sasaran" aria-label="Judul sasaran" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+            <label className="block"><span className="sr-only">Indikator Rapor</span><select value={sasaranForm.indikator} onChange={(e) => setSasaranForm({ ...sasaranForm, indikator: e.target.value })} aria-label="Indikator Rapor" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
               {indikatorOpts.map((o) => <option key={o.kode} value={o.kode}>{o.kode} — {o.nama.slice(0, 40)}</option>)}
-            </select>
+            </select></label>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-            <input value={sasaranForm.target2030} onChange={(e) => setSasaranForm({ ...sasaranForm, target2030: e.target.value })} placeholder="Target 2030" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-            <input value={sasaranForm.pj} onChange={(e) => setSasaranForm({ ...sasaranForm, pj: e.target.value })} placeholder="Penanggung jawab" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+            <label className="block"><span className="sr-only">Target 2030</span><input value={sasaranForm.target2030} onChange={(e) => setSasaranForm({ ...sasaranForm, target2030: e.target.value })} placeholder="Target 2030" aria-label="Target 2030" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+            <label className="block"><span className="sr-only">Penanggung jawab</span><input value={sasaranForm.pj} onChange={(e) => setSasaranForm({ ...sasaranForm, pj: e.target.value })} placeholder="Penanggung jawab" aria-label="Penanggung jawab" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
             <Button size="sm" onClick={addSasaran}>Tambah</Button>
           </div>
         </div>
         <div className="mt-2 space-y-1.5">
-          {rkjm.sasaran.length === 0 && <div className="text-xs text-zinc-400 py-3 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada — tambah sasaran.</div>}
+          {rkjm.sasaran.length === 0 && <div className="text-xs text-zinc-500 py-3 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada — tambah sasaran.</div>}
           {rkjm.sasaran.map((s) => (
             <div key={s.id} className="flex gap-2 items-center rounded-xl border border-[#ece9f5] bg-white px-3 py-2">
               <span className="font-mono text-xs font-medium">{s.kode}</span>
               <span className="text-xs flex-1 truncate">{s.judul} <Badge className="ml-1">{s.indikator_rapor_kode}</Badge></span>
-              <span className="text-xs text-zinc-400 hidden sm:inline">{s.target["2029/2030"]} · {s.penanggung_jawab}</span>
+              <span className="text-xs text-zinc-500 hidden sm:inline">{s.target["2029/2030"]} · {s.penanggung_jawab}</span>
               <Button variant="ghost" size="sm" onClick={() => removeSasaran(s.id)}>Hapus</Button>
             </div>
           ))}
@@ -144,18 +144,18 @@ export default function RKJMPage() {
       <Card className="p-4">
         <Kicker>Program dan Peta Jalan</Kicker>
         <div className="mt-2 grid gap-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff] p-3">
-          <input value={programForm.nama} onChange={(e) => setProgramForm({ ...programForm, nama: e.target.value })} placeholder="Nama program" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-          <textarea value={programForm.strategi} onChange={(e) => setProgramForm({ ...programForm, strategi: e.target.value })} placeholder="Strategi — 1 kalimat" rows={2} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <label className="block"><span className="sr-only">Nama program</span><input value={programForm.nama} onChange={(e) => setProgramForm({ ...programForm, nama: e.target.value })} placeholder="Nama program" aria-label="Nama program" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+          <label className="block"><span className="sr-only">Strategi</span><textarea value={programForm.strategi} onChange={(e) => setProgramForm({ ...programForm, strategi: e.target.value })} placeholder="Strategi — 1 kalimat" aria-label="Strategi" rows={2} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
           <Button size="sm" className="self-start" onClick={addProgram}>Tambah program</Button>
         </div>
         <div className="mt-2 space-y-1.5">
-          {rkjm.program.length === 0 && <div className="text-xs text-zinc-400 py-2 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada program.</div>}
+          {rkjm.program.length === 0 && <div className="text-xs text-zinc-500 py-2 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada program.</div>}
           {rkjm.program.map((p) => <div key={p.id} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2"><div className="text-xs font-medium">{p.nama}</div>{p.strategi && <div className="text-xs text-zinc-500 mt-0.5">{p.strategi}</div>}</div>)}
         </div>
-        <div className="mt-3">
-          <div className="text-xs font-medium text-zinc-700">MONEV</div>
+        <label className="block mt-3">
+          <span className="text-xs font-medium text-zinc-700">MONEV</span>
           <textarea value={rkjm.bab6_monev} onChange={(e) => setRkjm({ ...rkjm, bab6_monev: e.target.value })} rows={2} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-        </div>
+        </label>
         <div className="mt-2 flex gap-2">
           <Button size="sm" onClick={() => save(rkjm)}>Simpan</Button>
           <Link href="/rkt" className="h-8 px-4 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKT</Link>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { db, fmtRp } from "@/lib/db";
@@ -40,8 +40,9 @@ export default function ArsipPage() {
     // Strip scan base64 agar file tetap ringan — scan bisa diunduh per dokumen
     const strip = <T extends Record<string, unknown>>(rows: T[]): T[] =>
       rows.map((r) => {
-        const { scanDataUrl: _drop, ...rest } = r;
-        return rest as T;
+        const rest = { ...r };
+        delete rest.scanDataUrl;
+        return rest;
       });
     const payload = { rkjmList: strip(rkjmList as unknown as Record<string, unknown>[]), rktList: strip(rktList as unknown as Record<string, unknown>[]), rkasList: strip(rkasList as unknown as Record<string, unknown>[]), kspList: strip(kspList as unknown as Record<string, unknown>[]), raporImports, exportedAt: new Date().toISOString(), sekolah: "SMP Negeri 5 Tegal — NPSN 20329830", tanpaScan: true };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
@@ -87,7 +88,7 @@ export default function ArsipPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Card className="p-3">
           <Kicker>RKJM</Kicker>
-          {rkjmList.length === 0 ? <div className="text-xs text-zinc-400 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : rkjmList.map((r) => (
+          {rkjmList.length === 0 ? <div className="text-xs text-zinc-500 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : rkjmList.map((r) => (
             <div key={r.id} className="mt-2 rounded-xl border border-[#ece9f5] bg-[#f8f7ff] p-2.5 flex justify-between gap-2">
               <div className="min-w-0"><div className="text-xs font-medium">RKJM {r.periode}</div><div className="text-xs text-zinc-500">{r.status} · {new Date(r.updatedAt).toLocaleDateString("id-ID")}</div>{r.scanName && <div className="text-xs text-emerald-700">Scan: {r.scanName}</div>}</div>
               <Badge>{r.status}</Badge>
@@ -97,7 +98,7 @@ export default function ArsipPage() {
         </Card>
         <Card className="p-3">
           <Kicker>Rencana</Kicker>
-          {rktList.length === 0 ? <div className="text-xs text-zinc-400 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : [...rktList].sort((a, b) => a.tahun_ajaran.localeCompare(b.tahun_ajaran)).map((r) => (
+          {rktList.length === 0 ? <div className="text-xs text-zinc-500 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : [...rktList].sort((a, b) => a.tahun_ajaran.localeCompare(b.tahun_ajaran)).map((r) => (
             <div key={r.id} className="mt-2 rounded-xl border border-[#ece9f5] bg-white p-2.5">
               <div className="flex justify-between"><span className="text-xs font-medium">RKT {r.tahun_ajaran}</span><Badge tone={r.kegiatan.length > 12 ? "merah" : "netral"}>{r.kegiatan.length}/12</Badge></div>
               <div className="text-xs text-zinc-500">Butuh anggaran {r.kegiatan.filter((x) => x.biaya === "Ya").length} · {r.status}</div>
@@ -107,7 +108,7 @@ export default function ArsipPage() {
         </Card>
         <Card className="p-3">
           <Kicker>Anggaran</Kicker>
-          {rkasList.length === 0 ? <div className="text-xs text-zinc-400 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : [...rkasList].sort((a, b) => a.tahun_ajaran.localeCompare(b.tahun_ajaran)).map((r) => (
+          {rkasList.length === 0 ? <div className="text-xs text-zinc-500 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : [...rkasList].sort((a, b) => a.tahun_ajaran.localeCompare(b.tahun_ajaran)).map((r) => (
             <div key={r.id} className="mt-2 rounded-xl border border-[#ece9f5] bg-white p-2.5">
               <div className="flex justify-between"><span className="text-xs font-medium">RKAS {r.tahun_ajaran}</span><Badge>{r.status}</Badge></div>
               <div className="text-xs text-zinc-500">{r.baris.length} item · {fmtRp(r.baris.reduce((a, b) => a + b.total, 0))}</div>
@@ -117,7 +118,7 @@ export default function ArsipPage() {
         </Card>
         <Card className="p-3">
           <Kicker>Kurikulum</Kicker>
-          {kspList.length === 0 ? <div className="text-xs text-zinc-400 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : [...kspList].sort((a, b) => a.tahun_ajaran.localeCompare(b.tahun_ajaran)).map((r) => (
+          {kspList.length === 0 ? <div className="text-xs text-zinc-500 py-4 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada.</div> : [...kspList].sort((a, b) => a.tahun_ajaran.localeCompare(b.tahun_ajaran)).map((r) => (
             <div key={r.id} className="mt-2 rounded-xl border border-[#ece9f5] bg-white p-2.5">
               <div className="flex justify-between"><span className="text-xs font-medium">KSP {r.tahun_ajaran}</span><Badge>{r.status}</Badge></div>
               <div className="text-xs text-zinc-500">{r.cp.length} CP · {r.rkt_kegiatan_ids.length} tautan</div>
@@ -129,13 +130,13 @@ export default function ArsipPage() {
 
       <Card className="p-3">
         <Kicker>Rapor</Kicker>
-        <p className="text-xs text-zinc-400 mt-1">Tersimpan offline.</p>
+        <p className="text-xs text-zinc-500 mt-1">Tersimpan offline.</p>
         <div className="mt-2 overflow-x-auto rounded-xl border border-[#ece9f5]">
           <table className="w-full text-sm">
             <thead className="bg-[#f8f7ff] text-zinc-500"><tr><th className="text-left px-3 py-1.5 font-semibold text-xs">File</th><th className="text-left px-3 py-1.5 font-semibold text-xs">Tahun</th><th className="text-left px-3 py-1.5 font-semibold text-xs">Waktu</th></tr></thead>
             <tbody>
-              <tr className="border-t border-[#f0ebe0] bg-amber-50/40"><td className="px-3 py-2 font-mono text-xs">rapor-2025.json (seed)</td><td className="px-3 py-2 text-xs">2025</td><td className="px-3 py-2 text-xs text-zinc-500">12 Mar 2026</td></tr>
-              {raporImports.map((r) => <tr key={r.id} className="border-t border-[#f0ebe0]"><td className="px-3 py-2 font-mono text-xs">{r.fileName}</td><td className="px-3 py-2 text-xs">{r.tahun}</td><td className="px-3 py-2 text-xs text-zinc-500">{new Date(r.importedAt).toLocaleString("id-ID")}</td></tr>)}
+              <tr className="border-t border-[#ece9f5] bg-amber-50/40"><td className="px-3 py-2 font-mono text-xs">rapor-2025.json (seed)</td><td className="px-3 py-2 text-xs">2025</td><td className="px-3 py-2 text-xs text-zinc-500">12 Mar 2026</td></tr>
+              {raporImports.map((r) => <tr key={r.id} className="border-t border-[#ece9f5]"><td className="px-3 py-2 font-mono text-xs">{r.fileName}</td><td className="px-3 py-2 text-xs">{r.tahun}</td><td className="px-3 py-2 text-xs text-zinc-500">{new Date(r.importedAt).toLocaleString("id-ID")}</td></tr>)}
             </tbody>
           </table>
         </div>

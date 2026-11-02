@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import { useEffect, useState } from "react";
 import { db, uid, nowISO } from "@/lib/db";
 import { Badge, Button, Card, Kicker } from "@/components/ui";
@@ -106,20 +106,15 @@ export default function KSPPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <Card className="p-3 space-y-2">
-          <Kicker>1 — Karakteristik</Kicker>
-          <textarea value={ksp.komponen.karakteristik} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, karakteristik: e.target.value } })} rows={3} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-          <Kicker>2 — Visi dan Misi</Kicker>
-          <input value={ksp.komponen.visi} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, visi: e.target.value } })} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Visi" />
-          <textarea value={ksp.komponen.misi.join("\n")} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, misi: e.target.value.split("\n") } })} rows={3} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Misi per baris" />
+          <label className="block"><Kicker>1 — Karakteristik</Kicker><textarea value={ksp.komponen.karakteristik} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, karakteristik: e.target.value } })} rows={3} aria-label="Karakteristik" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+          <label className="block"><Kicker>2 — Visi dan Misi</Kicker><input value={ksp.komponen.visi} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, visi: e.target.value } })} aria-label="Visi" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Visi" />
+          <textarea value={ksp.komponen.misi.join("\n")} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, misi: e.target.value.split("\n") } })} rows={3} aria-label="Misi" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Misi per baris" /></label>
           <Button variant="secondary" size="sm" onClick={() => persist(ksp)}>Simpan</Button>
         </Card>
         <Card className="p-3 space-y-2">
-          <Kicker>3 — Pengorganisasian</Kicker>
-          <textarea value={ksp.komponen.pengorganisasian} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, pengorganisasian: e.target.value } })} rows={4} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-          <Kicker>4 — Rencana Pembelajaran</Kicker>
-          <textarea value={ksp.komponen.rencana_pembelajaran} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, rencana_pembelajaran: e.target.value } })} rows={2} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-          <Kicker>5 — Pendampingan</Kicker>
-          <textarea value={ksp.komponen.pendampingan} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, pendampingan: e.target.value } })} rows={2} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <label className="block"><Kicker>3 — Pengorganisasian</Kicker><textarea value={ksp.komponen.pengorganisasian} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, pengorganisasian: e.target.value } })} rows={4} aria-label="Pengorganisasian" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+          <label className="block"><Kicker>4 — Rencana Pembelajaran</Kicker><textarea value={ksp.komponen.rencana_pembelajaran} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, rencana_pembelajaran: e.target.value } })} rows={2} aria-label="Rencana Pembelajaran" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+          <label className="block"><Kicker>5 — Pendampingan</Kicker><textarea value={ksp.komponen.pendampingan} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, pendampingan: e.target.value } })} rows={2} aria-label="Pendampingan" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
           <Button variant="secondary" size="sm" onClick={() => persist(ksp)}>Simpan</Button>
         </Card>
       </div>
@@ -147,15 +142,15 @@ export default function KSPPage() {
               <div key={c.id} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 flex gap-2 items-center">
                 <span className="text-xs font-medium">{c.mapel}</span>
                 <Badge tone={b.tone}>{b.label}</Badge>
-                <span className="text-xs text-zinc-400 hidden sm:inline truncate flex-1">{c.cp_teks.slice(0, 70)}</span>
+                <span className="text-xs text-zinc-500 hidden sm:inline truncate flex-1">{c.cp_teks.slice(0, 70)}</span>
                 <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus ${c.mapel}?`)) return; persist({ ...ksp, cp: ksp.cp.filter((x) => x.id !== c.id) }, "Dihapus"); }}>Hapus</Button>
               </div>
             );
           })}
         </div>
         <div className="mt-3 flex gap-2">
-          <input value={cpForm.mapel} onChange={(e) => setCpForm({ ...cpForm, mapel: e.target.value })} placeholder="Mapel" className="flex-1 rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
-          <input value={cpForm.cp} onChange={(e) => setCpForm({ ...cpForm, cp: e.target.value })} placeholder="Isi CP" className="flex-1 rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <label className="flex-1"><span className="sr-only">Mapel</span><input value={cpForm.mapel} onChange={(e) => setCpForm({ ...cpForm, mapel: e.target.value })} placeholder="Mapel" aria-label="Mapel" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
+          <label className="flex-1"><span className="sr-only">Isi CP</span><input value={cpForm.cp} onChange={(e) => setCpForm({ ...cpForm, cp: e.target.value })} placeholder="Isi CP" aria-label="Isi CP" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
           <Button size="sm" onClick={() => { if (!cpForm.mapel.trim() || !cpForm.cp.trim()) return; persist({ ...ksp, cp: [...ksp.cp, { id: uid("cp"), mapel: cpForm.mapel.trim(), fase: "D", cp_teks: cpForm.cp.trim(), sumber: showBanner && /agama|budi/i.test(cpForm.mapel) ? "Kep BKPDM 020/2026 (TA 2026/2027 — Agama)" : "Kep BSKAP 046/H/KR/2025", tp: [] }] }, "Ditambahkan"); setCpForm({ mapel: "", cp: "" }); }}>Tambah</Button>
         </div>
       </Card>

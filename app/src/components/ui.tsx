@@ -1,4 +1,4 @@
-import * as React from "react";
+﻿import * as React from "react";
 
 /* ── Template finance clean — kartu putih, lavender, tombol biru ── */
 
@@ -77,7 +77,7 @@ export function SectionTitle({ title, subtitle, action }: { title: string; subti
 }
 
 export function Kicker({ children }: { children: React.ReactNode }) {
-  return <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-zinc-400">{children}</div>;
+  return <div className="text-[11px] font-semibold tracking-[0.14em] uppercase text-zinc-500">{children}</div>;
 }
 
 export function Stat({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) {
@@ -85,7 +85,7 @@ export function Stat({ label, value, hint }: { label: string; value: React.React
     <div className="card-paper p-4">
       <div className="text-[11px] font-medium tracking-wide uppercase text-zinc-500">{label}</div>
       <div className="text-[22px] font-semibold tracking-tight mt-1 text-[#0f172a]">{value}</div>
-      {hint && <div className="text-xs text-zinc-400 mt-0.5">{hint}</div>}
+      {hint && <div className="text-xs text-zinc-500 mt-0.5">{hint}</div>}
     </div>
   );
 }
