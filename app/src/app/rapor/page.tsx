@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
-import { raporSeed, flagForIndikator, peringkatBadge, perubahanBadge } from "@/lib/rapor";
+import { flagForIndikator, peringkatBadge, perubahanBadge } from "@/lib/rapor";
+import { useRapor } from "@/lib/useRapor";
 import { Badge, Card, Kicker } from "@/components/ui";
 import { RaporImportCard } from "@/components/RaporImportCard";
 import Link from "next/link";
@@ -11,9 +12,10 @@ export default function RaporPage() {
   const [q, setQ] = useState("");
   const [tab, setTab] = useState<Tab>("level1");
   const [flagFilter, setFlagFilter] = useState<"semua" | "merah" | "kuning" | "hijau">("semua");
+  const { dataset, isImport, sumber } = useRapor();
 
   const rows = useMemo(() => {
-    const base = tab === "level1" ? raporSeed.indikator_level1 : tab === "level2" ? raporSeed.indikator_level2 : raporSeed.indikator_lengkap;
+    const base = tab === "level1" ? dataset.indikator_level1 : tab === "level2" ? dataset.indikator_level2 : dataset.indikator_lengkap;
     let filtered = base;
     if (q.trim()) {
       const s = q.toLowerCase();
@@ -21,7 +23,7 @@ export default function RaporPage() {
     }
     if (flagFilter !== "semua") filtered = filtered.filter((r) => flagForIndikator(r) === flagFilter);
     return filtered;
-  }, [q, tab, flagFilter]);
+  }, [q, tab, flagFilter, dataset]);
 
   return (
     <div className="space-y-4">
@@ -29,6 +31,7 @@ export default function RaporPage() {
         <div>
           <Kicker>Rapor</Kicker>
           <h2 className="text-[17px] font-semibold tracking-tight mt-1">Daftar indikator</h2>
+          <p className="text-xs text-zinc-500 mt-0.5">Sumber: {sumber}{isImport ? "" : " — upload file baru untuk mengganti"}</p>
         </div>
         <Link href="/rapor/analisis" className="h-8 px-4 inline-flex items-center justify-center rounded-xl bg-[#2b5cff] text-white text-xs font-medium">Buka Analisis</Link>
       </div>
@@ -38,7 +41,7 @@ export default function RaporPage() {
       <Card className="p-3 sm:p-4">
         <div className="flex flex-wrap gap-2 items-center justify-between">
           <div className="flex gap-1 p-1 rounded-xl bg-[#f8f7ff] border border-[#ece9f5]">
-            {([["level1", `Level 1 (${raporSeed.indikator_level1.length})`], ["level2", `Level 2 (${raporSeed.indikator_level2.length})`], ["semua", `Semua (${raporSeed.indikator_lengkap.length})`]] as const).map(([k, label]) => (
+            {([["level1", `Level 1 (${dataset.indikator_level1.length})`], ["level2", `Level 2 (${dataset.indikator_level2.length})`], ["semua", `Semua (${dataset.indikator_lengkap.length})`]] as const).map(([k, label]) => (
               <button key={k} onClick={() => setTab(k)} className={`px-3 py-1 rounded-lg text-xs font-medium transition ${tab === k ? "bg-white shadow-sm border border-[#ece9f5] text-[#0f172a]" : "text-zinc-500 hover:text-zinc-700"}`}>{label}</button>
             ))}
           </div>

@@ -3,14 +3,12 @@ import { useEffect, useMemo, useState } from "react";
 import { Badge, Button, Card, Kicker } from "@/components/ui";
 import { DocActions } from "@/components/DocActions";
 import { ScanUpload } from "@/components/ScanUpload";
-import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
+import { exportToExcel, openPrintWindow, docHtml, tableHtml, escapeHtml } from "@/lib/export";
 import { db, uid, nowISO } from "@/lib/db";
-import { raporSeed } from "@/lib/rapor";
+import { useRapor } from "@/lib/useRapor";
 import type { RKJM, RKT, RKTKegiatan } from "@/lib/types";
-import { RKT_MAX } from "@/lib/types";
+import { RKT_MAX, TAHUN_OPSI } from "@/lib/types";
 import Link from "next/link";
-
-const TAHUN_OPSI = ["2026/2027", "2027/2028", "2028/2029", "2029/2030"];
 
 export default function RKTPage() {
   const [rkjm, setRkjm] = useState<RKJM | null>(null);
@@ -51,8 +49,9 @@ export default function RKTPage() {
     return () => { alive = false; };
   }, [rkjm, tahun]);
 
-  const prioritasDefault = useMemo(() => raporSeed.prioritas_pbd_2025.daftar, []);
-  const indikatorOpts = useMemo(() => raporSeed.indikator_level1.map((x) => ({ kode: x.kode, nama: x.nama })), []);
+  const { dataset } = useRapor();
+  const prioritasDefault = useMemo(() => dataset.prioritas_pbd_2025.daftar, [dataset]);
+  const indikatorOpts = useMemo(() => dataset.indikator_level1.map((x) => ({ kode: x.kode, nama: x.nama })), [dataset]);
 
   async function persist(next: RKT, m = "Tersimpan.") {
     await db.rkt.put({ ...next, updatedAt: nowISO() } as unknown as RKT);
@@ -84,7 +83,7 @@ export default function RKTPage() {
     openPrintWindow(docHtml({
       title: `RKT ${tahun} — SMP Negeri 5 Tegal`, subtitle: `Status ${rkt.status}`,
       meta: [["Tahun", tahun], ["Prioritas", `${rkt.kegiatan.length}/12`], ["Butuh Anggaran", String(rkt.kegiatan.filter((x) => x.biaya === "Ya").length)], ["Status", rkt.status]],
-      sections: [{ heading: "Evaluasi Tahun Lalu", html: `<p style="font-size:13px;white-space:pre-wrap">${(rkt.evaluasi_lalu || "—").replace(/</g, "&lt;")}</p>` }, { heading: "Daftar Prioritas", html: tableHtml(["No", "Kode", "Akar", "Kegiatan", "Biaya"], rkt.kegiatan.map((k) => [String(k.no), k.identifikasi_kode, k.akar_kode ?? "—", k.kegiatan_benahi, k.biaya])) }],
+      sections: [{ heading: "Evaluasi Tahun Lalu", html: `<p style="font-size:13px;white-space:pre-wrap">${escapeHtml(rkt.evaluasi_lalu || "—")}</p>` }, { heading: "Daftar Prioritas", html: tableHtml(["No", "Kode", "Akar", "Kegiatan", "Biaya"], rkt.kegiatan.map((k) => [String(k.no), k.identifikasi_kode, k.akar_kode ?? "—", k.kegiatan_benahi, k.biaya])) }],
     }), `RKT ${tahun}`);
   }
 
@@ -140,7 +139,7 @@ export default function RKTPage() {
         <div className="mt-3 grid gap-2.5 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff] p-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <select value={form.identifikasi} onChange={(e) => setForm({ ...form, identifikasi: e.target.value })} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
-              {useMemo(() => raporSeed.indikator_level1.map((x) => ({ kode: x.kode, nama: x.nama })), []).map((o) => <option key={o.kode} value={o.kode}>{o.kode} — {o.nama.slice(0, 36)}</option>)}
+              {indikatorOpts.map((o) => <option key={o.kode} value={o.kode}>{o.kode} — {o.nama.slice(0, 36)}</option>)}
             </select>
             <input value={form.akar} onChange={(e) => setForm({ ...form, akar: e.target.value })} placeholder="Akar" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
             <select value={form.sasaran} onChange={(e) => setForm({ ...form, sasaran: e.target.value })} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">

@@ -1,11 +1,72 @@
 import type { RaporDataset, IndikatorRapor } from "./types";
+import type { ParsedRapor } from "./parseRapor";
 import seed from "@/data/rapor-2025.json";
 
 export const raporSeed = seed as unknown as RaporDataset;
 
+// ── Dataset aktif: hasil impor (ParsedRapor) dikonversi ke bentuk RaporDataset ──
+export function parsedToDataset(p: ParsedRapor): RaporDataset {
+  const lengkap: IndikatorRapor[] = p.indikator.map((r, i) => ({
+    kode: r.kode ?? `IMP-${i + 1}`,
+    nama: r.nama,
+    capaian_label: r.capaian_label,
+    skor_2025: r.skor_2025,
+    definisi: r.definisi,
+    perubahan: r.perubahan,
+    skor_2024: r.skor_2024,
+    peringkat_kab: r.peringkat_kab,
+    peringkat_nas: r.peringkat_nas,
+    sumber: r.sumber,
+    tipe: "impor",
+  }));
+  const isLv1 = (k: string) => k.split(".").length <= 2;
+  let level1 = lengkap.filter((x) => isLv1(x.kode));
+  const level2 = lengkap.filter((x) => !isLv1(x.kode));
+  if (level1.length === 0) level1 = lengkap;
+  const daftar = p.prioritas.map((r, i) => ({
+    no: parseInt(r.no, 10) || i + 1,
+    identifikasi_kode: r.identifikasi_kode ?? "",
+    identifikasi_label: null,
+    identifikasi_skor: null,
+    akar_lv1_kode: null,
+    akar_lv2_kode: r.akar_lv2_kode,
+    akar_deskripsi: null,
+    kegiatan_benahi: r.kegiatan_benahi,
+    tautan_benahi: null,
+    kegiatan_arkas: null,
+  }));
+  return {
+    metadata: {
+      satuan: "SMP Negeri 5 Tegal",
+      npsn: "20329830",
+      tahun_rapor: p.tahun,
+      sumber_file: p.fileName,
+      diperbarui: new Date().toISOString().slice(0, 10),
+    },
+    indikator_level1: level1,
+    indikator_level2: level2,
+    indikator_lengkap: lengkap,
+    prioritas_pbd_2025: { jumlah_rekomendasi_prioritas: daftar.length, daftar },
+  };
+}
+
+export function datasetFromImport(rawJson: string): RaporDataset | null {
+  try {
+    const o = JSON.parse(rawJson) as Record<string, unknown>;
+    if (!o || typeof o !== "object") return null;
+    if (Array.isArray(o["indikator_level1"]) && (o as unknown as RaporDataset).prioritas_pbd_2025) {
+      return o as unknown as RaporDataset;
+    }
+    if (Array.isArray(o["indikator"])) return parsedToDataset(o as unknown as ParsedRapor);
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 // ── Helpers untuk Sheet 2 ──
-export function getIndikatorByKode(kode: string): IndikatorRapor | undefined {
-  return raporSeed.indikator_lengkap.find(
+export function getIndikatorByKode(kode: string, ds?: RaporDataset): IndikatorRapor | undefined {
+  return (ds ?? raporSeed).indikator_lengkap.find(
     (x) => x.kode === kode
   );
 }

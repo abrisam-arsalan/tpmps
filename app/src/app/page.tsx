@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { raporSeed } from "@/lib/rapor";
+import { useRapor, useRaporCount } from "@/lib/useRapor";
 import { Badge, Card, Kicker, Progress, Stat } from "@/components/ui";
 import { RaporImportCard } from "@/components/RaporImportCard";
 import { db } from "@/lib/db";
@@ -15,13 +15,13 @@ export default function Home() {
   const [ksp, setKsp] = useState<KSP | null>(null);
   const [rkts, setRkts] = useState<RKT[]>([]);
   const [ksps, setKsps] = useState<KSP[]>([]);
-  const [raporCount, setRaporCount] = useState<number | null>(null);
+  const { dataset, sumber } = useRapor();
+  const raporCount = useRaporCount();
 
   useEffect(() => {
     let alive = true;
     (async () => {
       try {
-        const c = await db.raporImports.count();
         const rj = await db.rkjm.orderBy("updatedAt").reverse().first();
         const rk = await db.rkt.orderBy("updatedAt").reverse().first();
         const rs = await db.rkas.orderBy("updatedAt").reverse().first().catch(() => null);
@@ -29,7 +29,6 @@ export default function Home() {
         const allRkts = await db.rkt.toArray().catch(() => []);
         const allKsps = await db.ksp.toArray().catch(() => []);
         if (!alive) return;
-        setRaporCount(c);
         if (rj) setRkjm(rj as unknown as RKJM);
         if (rk) setRkt(rk as unknown as RKT);
         if (rs) setRkas(rs as unknown as RKAS);
@@ -42,11 +41,11 @@ export default function Home() {
   }, []);
 
   const stats = useMemo(() => {
-    const l1 = raporSeed.indikator_level1.length;
-    const l2 = raporSeed.indikator_level2.length;
-    const prio = raporSeed.prioritas_pbd_2025.daftar.length;
+    const l1 = dataset.indikator_level1.length;
+    const l2 = dataset.indikator_level2.length;
+    const prio = dataset.prioritas_pbd_2025.daftar.length;
     return { l1, l2, prio };
-  }, []);
+  }, [dataset]);
   const issues = useMemo(() => healthCheck({ rkjm, rkts, rkas, ksps, rktAktif: rkt }), [rkjm, rkts, rkas, ksps, rkt]);
   const primaryIssue = issues.find((x) => x.severity === "merah") ?? issues[0];
   const health = useMemo(() => {
@@ -147,22 +146,25 @@ export default function Home() {
       </div>
 
       <Card className="p-4 sm:p-5">
-        <Kicker>Rapor — ringkas untuk RKJM</Kicker>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Kicker>Rapor — ringkas untuk RKJM</Kicker>
+          <span className="text-[11px] text-zinc-500">Sumber: {sumber}</span>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
           <div className="rounded-2xl bg-emerald-50 border border-emerald-100 p-3.5">
-            <div className="text-xs font-semibold text-emerald-900">Kekuatan</div>
+            <div className="text-xs font-semibold text-emerald-900">Baik</div>
             <ul className="text-[13px] leading-5 text-emerald-800 mt-1.5 space-y-1 list-disc pl-4">
-              <li>Literasi <strong>91,11%</strong> — skor 76,69</li>
-              <li>D.2 Refleksi 73,14 · D.3 Kepemimpinan 70,91</li>
-              <li>E.7 Fasilitas 96,83</li>
+              {(dataset.ringkasan_temuan?.indikator_menonjol_positif ?? dataset.indikator_level1.filter((x) => (x.skor_2025 ?? "").toString().includes("Baik")).slice(0, 3).map((x) => `${x.kode} — ${x.nama}`)).slice(0, 3).map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
             </ul>
           </div>
           <div className="rounded-2xl bg-amber-50 border border-amber-100 p-3.5">
-            <div className="text-xs font-semibold text-amber-900">Perlu perbaikan</div>
+            <div className="text-xs font-semibold text-amber-900">Perlu perhatian</div>
             <ul className="text-[13px] leading-5 text-amber-800 mt-1.5 space-y-1 list-disc pl-4">
-              <li>A.2 Numerasi 84,44% · Data 59,61</li>
-              <li>E.3 TIK 50</li>
-              <li>D.10 Inklusivitas 59,6</li>
+              {(dataset.ringkasan_temuan?.indikator_perlu_perhatian ?? dataset.prioritas_pbd_2025.daftar.slice(0, 3).map((p) => `${p.identifikasi_kode}${p.kegiatan_benahi ? ` — ${p.kegiatan_benahi.slice(0, 60)}` : ""}`)).slice(0, 3).map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
             </ul>
           </div>
         </div>

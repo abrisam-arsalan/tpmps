@@ -1,9 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { db, fmtRp } from "@/lib/db";
 import { Card, Badge, Button, Kicker } from "@/components/ui";
 import type { RKJM, RKT, RKAS, KSP } from "@/lib/types";
+
+type BackupPayload = {
+  rkjmList?: RKJM[]; rktList?: RKT[]; rkasList?: RKAS[]; kspList?: KSP[];
+  raporImports?: Array<{ id: string; tahun: number; fileName: string; importedAt: string; rawJson?: string }>;
+};
 
 export default function ArsipPage() {
   const [rkjmList, setRkjmList] = useState<RKJM[]>([]);
@@ -28,10 +33,39 @@ export default function ArsipPage() {
     return () => { alive = false; };
   }, []);
 
+  const [restoreMsg, setRestoreMsg] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
   async function exportAllJson() {
-    const payload = { rkjmList, rktList, rkasList, kspList, raporImports, exportedAt: new Date().toISOString(), sekolah: "SMP Negeri 5 Tegal — NPSN 20329830" };
+    // Strip scan base64 agar file tetap ringan — scan bisa diunduh per dokumen
+    const strip = <T extends Record<string, unknown>>(rows: T[]): T[] =>
+      rows.map((r) => {
+        const { scanDataUrl: _drop, ...rest } = r;
+        return rest as T;
+      });
+    const payload = { rkjmList: strip(rkjmList as unknown as Record<string, unknown>[]), rktList: strip(rktList as unknown as Record<string, unknown>[]), rkasList: strip(rkasList as unknown as Record<string, unknown>[]), kspList: strip(kspList as unknown as Record<string, unknown>[]), raporImports, exportedAt: new Date().toISOString(), sekolah: "SMP Negeri 5 Tegal — NPSN 20329830", tanpaScan: true };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = url; a.download = `Arsip-SMPN5-${new Date().toISOString().slice(0, 10)}.json`; a.click(); URL.revokeObjectURL(url);
+  }
+
+  async function handleRestore(f: File | null) {
+    if (!f) return;
+    setRestoreMsg(null);
+    try {
+      const payload = JSON.parse(await f.text()) as BackupPayload;
+      const counts: string[] = [];
+      if (payload.rkjmList?.length) { await db.rkjm.bulkPut(payload.rkjmList as unknown as RKJM[]); counts.push(`${payload.rkjmList.length} RKJM`); }
+      if (payload.rktList?.length) { await db.rkt.bulkPut(payload.rktList as unknown as RKT[]); counts.push(`${payload.rktList.length} RKT`); }
+      if (payload.rkasList?.length) { await db.rkas.bulkPut(payload.rkasList as unknown as RKAS[]); counts.push(`${payload.rkasList.length} RKAS`); }
+      if (payload.kspList?.length) { await db.ksp.bulkPut(payload.kspList as unknown as KSP[]); counts.push(`${payload.kspList.length} KSP`); }
+      const ri = payload.raporImports?.filter((r) => r.rawJson) ?? [];
+      if (ri.length) { await db.raporImports.bulkPut(ri as unknown as { id: string; tahun: number; fileName: string; importedAt: string; rawJson: string }[]); counts.push(`${ri.length} impor Rapor`); }
+      if (counts.length === 0) { setRestoreMsg("File tidak berisi data yang dikenali."); return; }
+      setRestoreMsg(`Berhasil — ${counts.join(", ")} dikembalikan.`);
+      setTimeout(() => window.location.reload(), 1500);
+    } catch {
+      setRestoreMsg("File tidak valid — pilih file backup .json.");
+    } finally { if (fileRef.current) fileRef.current.value = ""; }
   }
 
   return (
@@ -42,8 +76,13 @@ export default function ArsipPage() {
           <h2 className="text-[17px] font-semibold tracking-tight mt-1">Tersimpan per tahun</h2>
           <p className="text-[13px] leading-5 text-zinc-500 mt-1">File tahun lalu tetap ada.</p>
         </div>
-        <Button variant="secondary" size="sm" onClick={exportAllJson}>Export Backup</Button>
+        <div className="flex gap-2">
+          <Button variant="secondary" size="sm" onClick={exportAllJson}>Export Backup</Button>
+          <Button size="sm" onClick={() => fileRef.current?.click()}>Kembalikan</Button>
+        </div>
       </div>
+      <input ref={fileRef} type="file" accept=".json,application/json" className="hidden" onChange={(e) => handleRestore(e.target.files?.[0] ?? null)} />
+      {restoreMsg && <div className={`rounded-xl border px-3 py-2 text-xs ${restoreMsg.startsWith("Berhasil") ? "bg-emerald-50 border-emerald-100 text-emerald-800" : "bg-amber-50 border-amber-100 text-amber-800"}`}>{restoreMsg}</div>}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <Card className="p-3">

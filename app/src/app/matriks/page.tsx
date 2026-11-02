@@ -3,10 +3,12 @@ import { useEffect, useState } from "react";
 import { db, fmtRp } from "@/lib/db";
 import { Badge, Button, Card, Kicker } from "@/components/ui";
 import { buildTrace, healthCheck } from "@/lib/trace";
+import { useRapor } from "@/lib/useRapor";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
 import type { RKJM, RKT, RKAS, KSP } from "@/lib/types";
+import { TAHUN_OPSI } from "@/lib/types";
 
-const TA = ["2026/2027", "2027/2028", "2028/2029", "2029/2030"] as const;
+const TA = TAHUN_OPSI;
 
 export default function KeterkaitanPage() {
   const [tahun, setTahun] = useState<string>("2026/2027");
@@ -38,7 +40,8 @@ export default function KeterkaitanPage() {
     return () => { alive = false; };
   }, [tahun]);
 
-  const rows = buildTrace(rkt, rkjm, rkas, ksp);
+  const { dataset } = useRapor();
+  const rows = buildTrace(rkt, rkjm, rkas, ksp, dataset);
   const issues = healthCheck({ rkjm, rkts: allRkts, rkas, ksps: allKsps, rktAktif: rkt });
 
   async function doExport() {

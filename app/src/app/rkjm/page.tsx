@@ -6,7 +6,7 @@ import { DocActions } from "@/components/DocActions";
 import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
 import { db, uid, nowISO } from "@/lib/db";
-import { raporSeed } from "@/lib/rapor";
+import { useRapor } from "@/lib/useRapor";
 import type { RKJM, RKJMSasaran, RKJMProgram } from "@/lib/types";
 
 const PERIODE = "2026-2030";
@@ -43,8 +43,10 @@ export default function RKJMPage() {
     setRkjm(next); setSaveMsg(msg); setTimeout(() => setSaveMsg(null), 2200);
   }
 
+  const { dataset } = useRapor();
+
   if (loading || !rkjm) return <div className="py-12 text-center text-sm text-zinc-500">Memuat…</div>;
-  const indikatorOpts = raporSeed.indikator_level1.map((x) => ({ kode: x.kode, nama: x.nama }));
+  const indikatorOpts = dataset.indikator_level1.map((x) => ({ kode: x.kode, nama: x.nama }));
 
   function addSasaran() {
     if (!rkjm || !sasaranForm.judul.trim()) return;

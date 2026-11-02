@@ -7,9 +7,10 @@ import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
 import { CP_SEED, cpBadgeSumber } from "@/lib/ksp";
 import type { KSP, KSPKomponen, RKJM, RKT } from "@/lib/types";
+import { TAHUN_OPSI } from "@/lib/types";
 import Link from "next/link";
 
-const TA = ["2026/2027", "2027/2028", "2028/2029", "2029/2030"] as const;
+const TA = TAHUN_OPSI;
 function emptyKomponen(rkjm: RKJM | null): KSPKomponen {
   return {
     karakteristik: rkjm ? `Konteks RKJM ${rkjm.periode} — Visi: ${rkjm.visi.slice(0, 70)}…` : "",
@@ -72,6 +73,15 @@ export default function KSPPage() {
         { heading: "Bank CP Fase D", html: tableHtml(["Mapel", "CP", "Sumber"], ksp.cp.map((c) => [c.mapel, c.cp_teks.slice(0, 100), c.sumber])) },
       ],
     }), `KSP ${tahun}`);
+  }
+  if (!rkjm) {
+    return (
+      <div className="space-y-4">
+        <Kicker>Kurikulum</Kicker>
+        <h2 className="text-[17px] font-semibold">Buat RKJM dulu</h2>
+        <Card className="p-6 text-center"><p className="text-sm text-zinc-600">RKJM belum ada</p><Link href="/rkjm" className="mt-4 inline-flex h-9 px-4 items-center justify-center rounded-xl bg-[#2b5cff] text-white text-sm">Buka RKJM</Link></Card>
+      </div>
+    );
   }
   if (!ksp) return <div className="py-10 text-center text-sm text-zinc-500">Memuat KSP…</div>;
 

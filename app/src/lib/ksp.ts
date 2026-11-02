@@ -37,8 +37,6 @@ export const CP_SEED: CPEntry[] = [
   },
 ];
 
-export const KSP_TA_OPSI = ["2026/2027", "2027/2028", "2028/2029", "2029/2030"] as const;
-
 export function cpBadgeSumber(sumber: string) {
   if (sumber.includes("020/2026")) return { label: "020/2026 · Agama", tone: "kuning" as const };
   return { label: "046/2025", tone: "hijau" as const };

@@ -7,9 +7,10 @@ import { DocActions } from "@/components/DocActions";
 import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
 import type { RKAS, RkasBaris, RKT } from "@/lib/types";
+import { TAHUN_OPSI } from "@/lib/types";
 import arkasRef from "@/data/arkas-2026-reference.json";
 
-const TAHUN = ["2026/2027", "2027/2028", "2028/2029", "2029/2030"] as const;
+const TAHUN = TAHUN_OPSI;
 
 export default function RKASPage() {
   const [tahun, setTahun] = useState<string>("2026/2027");
@@ -114,7 +115,7 @@ export default function RKASPage() {
         <div className="mt-2 space-y-1.5">
           {rkas.pendapatan.map((p, i) => (
             <div key={i} className="flex gap-2">
-              <input value={p.sumber} onChange={(e) => { const v = [...rkas.pendapatan]; v[i] = { ...v[i], sumber: e.target.value }; persist({ ...rkas, pendapatan: v }, ""); }} className="flex-1 rounded-xl border border-[#ece9f5] bg-white px-2.5 py-1.5 text-sm" placeholder="Sumber" />
+              <input value={p.sumber} onChange={(e) => { const v = [...rkas.pendapatan]; v[i] = { ...v[i], sumber: e.target.value }; setRkas({ ...rkas, pendapatan: v }); }} onBlur={() => persist(rkas)} className="flex-1 rounded-xl border border-[#ece9f5] bg-white px-2.5 py-1.5 text-sm" placeholder="Sumber" />
               <input value={String(p.jumlah)} onChange={(e) => { const n = parseInt(e.target.value.replace(/\./g, ""), 10) || 0; const v = [...rkas.pendapatan]; v[i] = { ...v[i], jumlah: n }; setRkas({ ...rkas, pendapatan: v }); }} onBlur={() => persist(rkas)} className="w-28 rounded-xl border border-[#ece9f5] bg-white px-2.5 py-1.5 text-sm text-right" placeholder="Rp" />
             </div>
           ))}

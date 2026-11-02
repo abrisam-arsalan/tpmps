@@ -1,22 +1,24 @@
 "use client";
 import Link from "next/link";
-import { raporSeed } from "@/lib/rapor";
+import { useRapor } from "@/lib/useRapor";
 import { Card, Kicker } from "@/components/ui";
 
 export default function AnalisisPage() {
-  const prio = raporSeed.prioritas_pbd_2025.daftar;
+  const { dataset, sumber } = useRapor();
+  const prio = dataset.prioritas_pbd_2025.daftar;
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
         <div>
-          <Kicker>Analisis — 12 prioritas</Kicker>
+          <Kicker>Analisis — {prio.length} prioritas</Kicker>
           <h2 className="text-[17px] font-semibold tracking-tight mt-1">Pilih untuk RKT</h2>
+          <p className="text-xs text-zinc-500 mt-0.5">Sumber: {sumber}</p>
         </div>
         <Link href="/rkt" className="h-8 px-4 inline-flex items-center justify-center rounded-xl bg-[#2b5cff] text-white text-xs font-medium">Buka RKT</Link>
       </div>
 
       <Card className="p-3">
-        <Kicker>12 prioritas — pilih untuk RKT</Kicker>
+        <Kicker>{prio.length} prioritas — pilih untuk RKT</Kicker>
         <div className="mt-2 overflow-x-auto rounded-xl border border-[#ece9f5]">
           <table className="w-full text-sm">
             <thead className="bg-[#f8f7ff] text-zinc-600">

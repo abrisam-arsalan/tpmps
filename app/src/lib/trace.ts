@@ -1,4 +1,4 @@
-import type { RKJM, RKT, RKAS, KSP } from "./types";
+import type { RKJM, RKT, RKAS, KSP, RaporDataset } from "./types";
 import { getIndikatorByKode } from "./rapor";
 
 export type TraceRow = {
@@ -19,10 +19,10 @@ export type TraceRow = {
   hint: string;
 };
 
-export function buildTrace(rkt: RKT | null, rkjm: RKJM | null, rkas: RKAS | null, ksp: KSP | null): TraceRow[] {
+export function buildTrace(rkt: RKT | null, rkjm: RKJM | null, rkas: RKAS | null, ksp: KSP | null, ds?: RaporDataset): TraceRow[] {
   if (!rkt || rkt.kegiatan.length === 0) return [];
   return rkt.kegiatan.map((k, i) => {
-    const rapor = getIndikatorByKode(k.identifikasi_kode);
+    const rapor = getIndikatorByKode(k.identifikasi_kode, ds);
     const sas = rkjm?.sasaran.find((s) => s.id === k.sasaran_rkjm_id);
     const barisRkas = rkas?.baris.filter((b) => b.rktKegiatanId === k.id) ?? [];
     const totalRkas = barisRkas.length ? barisRkas.reduce((a, b) => a + b.total, 0) : null;

@@ -37,6 +37,15 @@ export function openPrintWindow(html: string, title: string) {
   setTimeout(() => w.print(), 600);
 }
 
+export const SEKOLAH = {
+  nama: "SMP NEGERI 5 TEGAL",
+  npsn: "NPSN 20329830",
+  alamat: "Kec. Tegal Selatan, Kota Tegal",
+  kepsek: "Sri Handayani Reksowati, S.Pd., M.Pd.",
+  nip: "NIP 197402262006042011",
+  app: "Aplikasi Manajemen PBD SMPN 5 Tegal",
+} as const;
+
 export function docHtml(opts: {
   title: string;
   subtitle: string;
@@ -45,15 +54,15 @@ export function docHtml(opts: {
   sections: Array<{ heading: string; html: string }>;
   footer?: string;
 }) {
-  const metaRows = opts.meta.map(([k, v]) => `<tr><td style="padding:4px 8px;color:#64748b;width:180px">${k}</td><td style="padding:4px 8px">${v}</td></tr>`).join("");
-  const sectionsHtml = opts.sections.map((s) => `<h2 style="font-size:15px;margin:18px 0 8px;color:#0f2a44;border-bottom:1px solid #e2e8f0;padding-bottom:6px">${s.heading}</h2>${s.html}`).join("");
+  const metaRows = opts.meta.map(([k, v]) => `<tr><td style="padding:4px 8px;color:#64748b;width:180px">${escapeHtml(k)}</td><td style="padding:4px 8px">${escapeHtml(v)}</td></tr>`).join("");
+  const sectionsHtml = opts.sections.map((s) => `<h2 style="font-size:15px;margin:18px 0 8px;color:#2b5cff;border-bottom:1px solid #e2e8f0;padding-bottom:6px">${escapeHtml(s.heading)}</h2>${s.html}`).join("");
   return `<!doctype html><html lang="id"><head><meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>${opts.title}</title>
+<title>${escapeHtml(opts.title)}</title>
 <style>
   *{box-sizing:border-box} body{font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;margin:0;color:#0f172a}
-  .kop{border-bottom:3px double #0f2a44;padding:14px 0 10px;text-align:center}
-  .kop h1{margin:0;font-size:18px;letter-spacing:.3px;color:#0f2a44}
+  .kop{border-bottom:3px double #2b5cff;padding:14px 0 10px;text-align:center}
+  .kop h1{margin:0;font-size:18px;letter-spacing:.3px;color:#2b5cff}
   .kop p{margin:2px 0;color:#64748b;font-size:12px}
   .wrap{max-width:900px;margin:0 auto;padding:18px 20px}
   .badge{display:inline-block;border:1px solid #e2e8f0;background:#f8fafc;border-radius:999px;padding:2px 8px;font-size:11px;color:#475569;margin-right:6px}
@@ -69,19 +78,19 @@ export function docHtml(opts: {
 </style></head><body>
 <div class="wrap">
   <div class="kop">
-    <h1>${opts.kop ?? "SMP NEGERI 5 TEGAL"}</h1>
-    <p>NPSN 20329830 · Kec. Tegal Selatan, Kota Tegal · ${opts.subtitle}</p>
+    <h1>${escapeHtml(opts.kop ?? SEKOLAH.nama)}</h1>
+    <p>${escapeHtml(SEKOLAH.npsn)} · ${escapeHtml(SEKOLAH.alamat)} · ${escapeHtml(opts.subtitle)}</p>
   </div>
-  <h1 class="title">${opts.title}</h1>
-  <p class="muted">${opts.subtitle}</p>
+  <h1 class="title">${escapeHtml(opts.title)}</h1>
+  <p class="muted">${escapeHtml(opts.subtitle)}</p>
   <table style="margin-top:10px"><tbody>${metaRows}</tbody></table>
   ${sectionsHtml}
   <div class="sig">
-    <div class="sig-box"><div style="font-size:12px;color:#64748b">Mengetahui,</div><div style="font-weight:600;margin-top:6px">Kepala SMP Negeri 5 Tegal</div><div style="margin-top:44px;font-size:12px">Sri Handayani Reksowati, S.Pd., M.Pd.<br/>NIP 197402262006042011</div></div>
+    <div class="sig-box"><div style="font-size:12px;color:#64748b">Mengetahui,</div><div style="font-weight:600;margin-top:6px">Kepala SMP Negeri 5 Tegal</div><div style="margin-top:44px;font-size:12px">${escapeHtml(SEKOLAH.kepsek)}<br/>${escapeHtml(SEKOLAH.nip)}</div></div>
     <div class="sig-box"><div style="font-size:12px;color:#64748b">Tegal, ……………………</div><div style="font-weight:600;margin-top:6px">Ketua Komite / Pengawas</div><div style="margin-top:44px;font-size:12px">_________________________</div></div>
   </div>
-  <div class="footer">${opts.footer ?? "Dokumen ini dicetak dari Aplikasi Manajemen PBD SMPN 5 Tegal (offline-first). File tahun lalu tetap tersimpan (G-04) — cetak manual + arsip scan."}</div>
-  <div class="no-print" style="margin-top:16px"><button onclick="window.print()" style="padding:10px 14px;border-radius:10px;border:1px solid #cbd5e1;background:#0f2a44;color:#fff;cursor:pointer">Cetak / Simpan PDF</button> <button onclick="window.close()" style="padding:10px 14px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;cursor:pointer">Tutup</button></div>
+  <div class="footer">${escapeHtml(opts.footer ?? `Dokumen ini dicetak dari ${SEKOLAH.app} (offline-first). File tahun lalu tetap tersimpan — cetak manual + arsip scan.`)}</div>
+  <div class="no-print" style="margin-top:16px"><button onclick="window.print()" style="padding:10px 14px;border-radius:10px;border:1px solid #cbd5e1;background:#2b5cff;color:#fff;cursor:pointer">Cetak / Simpan PDF</button> <button onclick="window.close()" style="padding:10px 14px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;cursor:pointer">Tutup</button></div>
 </div>
 </body></html>`;
 }
