@@ -49,7 +49,7 @@ export function ScanUpload({
             <img src={currentDataUrl} alt="Scan" className="max-h-48 rounded-2xl border border-[#ece9f5] bg-white" />
           )}
           {isPdf && <div className="text-xs text-zinc-500 rounded-xl border border-dashed border-[#ece9f5] bg-[#f8f7ff] px-3 py-2">PDF tersimpan — buka di tab baru untuk cetak ulang.</div>}
-          <a href={currentDataUrl} target="_blank" rel="noreferrer" download={currentName ?? "scan"} className="inline-flex mt-2 h-8 px-3 items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka file</a>
+          <a href={currentDataUrl} target="_blank" rel="noreferrer" download={currentName ?? "scan"} className="inline-flex mt-2 min-h-[44px] px-4 items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka file</a>
         </div>
       )}
     </div>

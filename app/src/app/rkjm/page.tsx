@@ -1,7 +1,7 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Badge, Button, Card, Kicker } from "@/components/ui";
+import { Badge, Button, Card, Kicker, LoadingBlock } from "@/components/ui";
 import { DocActions } from "@/components/DocActions";
 import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
@@ -46,7 +46,7 @@ export default function RKJMPage() {
 
   const { dataset } = useRapor();
 
-  if (loading || !rkjm) return <div className="py-12 text-center text-sm text-zinc-500">Memuat…</div>;
+  if (loading || !rkjm) return <LoadingBlock label="Memuat RKJM…" />;
   const indikatorOpts = dataset.indikator_level1.map((x) => ({ kode: x.kode, nama: x.nama }));
 
   function addSasaran() {

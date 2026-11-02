@@ -1,6 +1,6 @@
 ﻿"use client";
 import { useEffect, useMemo, useState } from "react";
-import { Badge, Button, Card, Kicker } from "@/components/ui";
+import { Badge, Button, Card, Kicker, LoadingBlock } from "@/components/ui";
 import { DocActions } from "@/components/DocActions";
 import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml, escapeHtml } from "@/lib/export";
@@ -88,7 +88,7 @@ export default function RKTPage() {
     }), `RKT ${tahun}`);
   }
 
-  if (loading) return <div className="py-12 text-center text-sm text-zinc-500">Memuat…</div>;
+  if (loading) return <LoadingBlock label="Memuat RKT…" />;
   if (!rkjm) {
     return (
       <div className="space-y-4">
@@ -97,7 +97,7 @@ export default function RKTPage() {
       </div>
     );
   }
-  if (!rkt) return <div className="py-12 text-center text-sm text-zinc-500">Memuat…</div>;
+  if (!rkt) return <LoadingBlock label="Memuat RKT…" />;
 
   const biayaYa = rkt.kegiatan.filter((x) => x.biaya === "Ya").length;
 

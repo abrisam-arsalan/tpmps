@@ -16,7 +16,19 @@ export default function AnalisisPage() {
 
       <Card className="p-3">
         <Kicker>{prio.length} prioritas — pilih untuk RKT</Kicker>
-        <div className="mt-2 overflow-x-auto rounded-xl border border-[#ece9f5]">
+        <div className="mt-2 space-y-1.5 sm:hidden" role="list" aria-label="Prioritas">
+          {prio.map((p) => (
+            <div key={p.no} role="listitem" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2.5">
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono text-xs font-medium">#{p.no} {p.identifikasi_kode}</span>
+                {p.akar_lv2_kode && <span className="ml-auto font-mono text-xs text-zinc-500">{p.akar_lv2_kode}</span>}
+              </div>
+              {p.kegiatan_benahi && <div className="text-xs text-zinc-600 mt-1 leading-4">{p.kegiatan_benahi.slice(0, 120)}</div>}
+              {p.tautan_benahi && <a href={p.tautan_benahi} target="_blank" rel="noreferrer" className="text-xs font-medium text-[#2b5cff] underline mt-1 inline-block min-h-[44px]">Panduan</a>}
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 overflow-x-auto rounded-xl border border-[#ece9f5] hidden sm:block">
           <table className="w-full text-sm">
             <thead className="bg-[#f8f7ff] text-zinc-600">
               <tr>
@@ -41,9 +53,13 @@ export default function AnalisisPage() {
       </Card>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <Card className="p-3"><Kicker>Numerasi</Kicker><div className="text-sm font-medium mt-1">A.2.4 Data dan Ketidakpastian</div><div className="text-xs text-zinc-500">59,61 · turun 6,54</div></Card>
-        <Card className="p-3"><Kicker>Kebinekaan dan Keamanan</Kicker><div className="text-sm font-medium mt-1">D.8 · D.4 · D.10</div><div className="text-xs text-zinc-500">Toleransi, kekerasan seksual, disabilitas</div></Card>
-        <Card className="p-3"><Kicker>Karakter</Kicker><div className="text-sm font-medium mt-1">A.3 · D.1</div><div className="text-xs text-zinc-500">Kreativitas, metode, inovasi</div></Card>
+        {prio.slice(0, 3).map((p) => (
+          <Card key={p.no} className="p-3">
+            <Kicker>Prioritas #{p.no}</Kicker>
+            <div className="text-sm font-medium mt-1">{p.identifikasi_kode}{p.akar_lv2_kode ? ` · ${p.akar_lv2_kode}` : ""}</div>
+            <div className="text-xs text-zinc-500 leading-4 mt-0.5">{p.kegiatan_benahi?.slice(0, 90) ?? p.akar_deskripsi?.slice(0, 90) ?? "—"}</div>
+          </Card>
+        ))}
       </div>
     </div>
   );

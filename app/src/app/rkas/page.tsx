@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { db, uid, nowISO, fmtRp } from "@/lib/db";
-import { Button, Card, Kicker } from "@/components/ui";
+import { Button, Card, Kicker, LoadingBlock } from "@/components/ui";
 import { DocActions } from "@/components/DocActions";
 import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
@@ -86,7 +86,7 @@ export default function RKASPage() {
       </div>
     );
   }
-  if (!rkas) return <div className="py-10 text-center text-sm text-zinc-500">Memuat RKAS…</div>;
+  if (!rkas) return <LoadingBlock label="Memuat RKAS…" />;
 
   return (
     <div className="space-y-4">

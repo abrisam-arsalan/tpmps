@@ -88,7 +88,7 @@ export default function Home() {
               { label: "Arsip", href: "/rkjm/arsip", done: false },
             ].map((s, i, arr) => (
               <span key={s.label} className="inline-flex items-center gap-2">
-                <Link href={s.href} aria-current={s.href === "/" ? (i === 0 ? "page" : undefined) : undefined} className={`min-h-[44px] px-4 inline-flex items-center justify-center rounded-full text-xs font-medium transition ${s.done ? "bg-white text-[#2b5cff] shadow-sm" : "bg-white/10 text-white border border-white/20 hover:bg-white/20"}`}>
+                <Link href={s.href} className={`min-h-[44px] px-4 inline-flex items-center justify-center rounded-full text-xs font-medium transition ${s.done ? "bg-white text-[#2b5cff] shadow-sm" : "bg-white/10 text-white border border-white/20 hover:bg-white/20"}`}>
                   <span className={`h-1.5 w-1.5 rounded-full mr-1.5 ${s.done ? "bg-emerald-500" : "bg-white/40"}`} aria-hidden="true" />
                   {s.label}
                 </Link>
@@ -125,13 +125,13 @@ export default function Home() {
           </div>
           <div className="mt-3 flex flex-wrap gap-1.5">
             {health.items.map((it) => (
-              <span key={it.label} className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs ${it.ok ? "bg-emerald-50 border-emerald-100 text-emerald-700" : "bg-white border-[#ece9f5] text-zinc-500"}`}>
-                <span className={`h-1.5 w-1.5 rounded-full ${it.ok ? "bg-emerald-500" : "bg-zinc-300"}`} />
+              <span key={it.label} className={`inline-flex items-center gap-1.5 rounded-full border min-h-[32px] px-3 py-1 text-xs ${it.ok ? "bg-emerald-50 border-emerald-100 text-emerald-700" : "bg-white border-[#ece9f5] text-zinc-500"}`}>
+                <span className={`h-1.5 w-1.5 rounded-full ${it.ok ? "bg-emerald-500" : "bg-zinc-300"}`} aria-hidden="true" />
                 {it.label}
               </span>
             ))}
           </div>
-          <Link href="/matriks" className="mt-3 inline-flex h-7 px-3 items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">
+          <Link href="/matriks" className="mt-3 inline-flex min-h-[44px] px-4 items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">
             Lihat validasi lengkap
           </Link>
         </Card>

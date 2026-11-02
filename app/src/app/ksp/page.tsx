@@ -1,7 +1,7 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
 import { db, uid, nowISO } from "@/lib/db";
-import { Badge, Button, Card, Kicker } from "@/components/ui";
+import { Badge, Button, Card, Kicker, LoadingBlock } from "@/components/ui";
 import { DocActions } from "@/components/DocActions";
 import { ScanUpload } from "@/components/ScanUpload";
 import { exportToExcel, openPrintWindow, docHtml, tableHtml } from "@/lib/export";
@@ -83,7 +83,7 @@ export default function KSPPage() {
       </div>
     );
   }
-  if (!ksp) return <div className="py-10 text-center text-sm text-zinc-500">Memuat KSP…</div>;
+  if (!ksp) return <LoadingBlock label="Memuat KSP…" />;
 
   return (
     <div className="space-y-4">

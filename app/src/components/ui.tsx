@@ -55,11 +55,26 @@ export function Button({
   );
 }
 
-export function Progress({ value }: { value: number }) {
+export function Progress({ value, label }: { value: number; label?: string }) {
   const v = Math.max(0, Math.min(100, value));
   return (
-    <div className="h-1.5 w-full rounded-full bg-[#ece9f5] overflow-hidden">
+    <div role="progressbar" aria-valuenow={v} aria-valuemin={0} aria-valuemax={100} aria-label={label ?? "Kelengkapan"} className="h-1.5 w-full rounded-full bg-[#ece9f5] overflow-hidden">
       <div className="h-full bg-[#2b5cff] transition-all duration-500" style={{ width: `${v}%` }} />
+    </div>
+  );
+}
+
+export function Skeleton({ className = "" }: { className?: string }) {
+  return <div aria-hidden="true" className={`animate-pulse rounded-xl bg-[#ece9f5]/70 ${className}`} />;
+}
+
+export function LoadingBlock({ label = "Memuat…" }: { label?: string }) {
+  return (
+    <div role="status" aria-live="polite" aria-busy="true" className="space-y-3 py-6">
+      <span className="sr-only">{label}</span>
+      <Skeleton className="h-9 w-48" />
+      <Skeleton className="h-24 w-full" />
+      <Skeleton className="h-24 w-full" />
     </div>
   );
 }
