@@ -24,7 +24,7 @@ export default function AnalisisPage() {
                 {p.akar_lv2_kode && <span className="ml-auto font-mono text-xs text-zinc-500">{p.akar_lv2_kode}</span>}
               </div>
               {p.kegiatan_benahi && <div className="text-xs text-zinc-600 mt-1 leading-4">{p.kegiatan_benahi.slice(0, 120)}</div>}
-              {p.tautan_benahi && <a href={p.tautan_benahi} target="_blank" rel="noreferrer" className="text-xs font-medium text-[#2b5cff] underline mt-1 inline-block min-h-[44px]">Panduan</a>}
+              {p.tautan_benahi && <a href={p.tautan_benahi} target="_blank" rel="noreferrer" aria-label={`Panduan ${p.identifikasi_kode}, buka di tab baru`} className="text-xs font-medium text-[#2b5cff] underline mt-1 inline-flex items-center gap-1 min-h-[44px]">Panduan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="h-3 w-3" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg></a>}
             </div>
           ))}
         </div>
@@ -44,7 +44,7 @@ export default function AnalisisPage() {
                   <td className="px-3 py-2.5 font-mono text-xs">{p.no}</td>
                   <td className="px-3 py-2.5"><div className="text-xs font-medium">{p.identifikasi_kode}</div></td>
                   <td className="px-3 py-2.5"><div className="text-xs font-medium">{p.akar_lv2_kode ?? "—"}</div><div className="text-xs text-zinc-500 leading-4 max-w-[260px]">{p.akar_deskripsi ?? "—"}</div></td>
-                  <td className="px-3 py-2.5">{p.tautan_benahi ? <a href={p.tautan_benahi} target="_blank" rel="noreferrer" className="text-xs font-medium text-[#2b5cff] underline">Panduan</a> : <span className="text-xs text-zinc-300">—</span>}</td>
+                  <td className="px-3 py-2.5">{p.tautan_benahi ? <a href={p.tautan_benahi} target="_blank" rel="noreferrer" aria-label={`Panduan ${p.identifikasi_kode}, buka di tab baru`} className="text-xs font-medium text-[#2b5cff] underline inline-flex items-center gap-1">Panduan <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" className="h-3 w-3" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg></a> : <span className="text-xs text-zinc-300">—</span>}</td>
                 </tr>
               ))}
             </tbody>

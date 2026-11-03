@@ -104,8 +104,9 @@ export default function KSPPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <Card className="p-3 space-y-2">
           <label className="block"><Kicker>1 — Karakteristik</Kicker><textarea value={ksp.komponen.karakteristik} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, karakteristik: e.target.value } })} rows={3} aria-label="Karakteristik" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
-          <label className="block"><Kicker>2 — Visi dan Misi</Kicker><input value={ksp.komponen.visi} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, visi: e.target.value } })} aria-label="Visi" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Visi" />
-          <textarea value={ksp.komponen.misi.join("\n")} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, misi: e.target.value.split("\n") } })} rows={3} aria-label="Misi" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Misi per baris" /></label>
+          <Kicker>2 — Visi dan Misi</Kicker>
+          <label className="block"><span className="sr-only">Visi</span><input value={ksp.komponen.visi} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, visi: e.target.value } })} aria-label="Visi" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Visi" /></label>
+          <label className="block"><span className="sr-only">Misi, satu per baris</span><textarea value={ksp.komponen.misi.join("\n")} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, misi: e.target.value.split("\n") } })} rows={3} aria-label="Misi, satu per baris" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" placeholder="Misi per baris" /></label>
           <Button variant="secondary" size="sm" onClick={() => persist(ksp)}>Simpan</Button>
         </Card>
         <Card className="p-3 space-y-2">

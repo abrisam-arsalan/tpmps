@@ -101,9 +101,10 @@ export function Shell({ children }: { children: React.ReactNode }) {
               </Link>
             );
           })}
-          {/* FAB tengah — RKT (aksi utama, seperti + Add) */}
-          <Link href="/rkt" className="h-12 w-12 rounded-full bg-[#2b5cff] text-white grid place-items-center text-xl font-light shadow-lg -mt-4 border-4 border-[#f2f0fb]" aria-label="Buka RKT">
-            +
+          {/* FAB tengah — RKT (aksi utama) */}
+          <Link href="/rkt" className="flex flex-col items-center justify-center gap-0 rounded-full bg-[#2b5cff] text-white shadow-lg -mt-4 border-4 border-[#f2f0fb] h-14 w-14" aria-label="Buka RKT">
+            <span className="text-lg font-light leading-none" aria-hidden="true">+</span>
+            <span className="text-[9px] font-semibold leading-none">RKT</span>
           </Link>
           {BOTTOM_RIGHT.map((n) => {
             // Arsip href is /rkjm/arsip — treat as startsWith

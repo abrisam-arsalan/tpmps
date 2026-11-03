@@ -100,11 +100,11 @@ export default function RKASPage() {
       {msg && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-2 text-xs">{msg}</div>}
       <DocActions status={rkas.status} onSiapCetak={() => persist({ ...rkas, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...rkas, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkas, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkas.scanDataUrl} sahHint={!rkas.scanDataUrl ? "Upload scan dulu" : undefined} />
 
-      <div className="grid grid-cols-3 gap-3">
-        <Card className="p-3 text-center"><div className="text-xs text-zinc-500">Belanja</div><div className="font-semibold text-sm mt-0.5">{fmtRp(totalBelanja)}</div></Card>
-        <Card className="p-3 text-center"><div className="text-xs text-zinc-500">Pendapatan</div><div className="font-semibold text-sm mt-0.5">{fmtRp(totalPdpt)}</div></Card>
-        <Card className={`p-3 text-center border ${totalPdpt - totalBelanja === 0 ? "bg-emerald-50 border-emerald-200" : totalPdpt - totalBelanja > 0 ? "bg-amber-50 border-amber-200" : "bg-red-50 border-red-200"}`}>
-          <div className="text-xs text-zinc-500">Selisih</div><div className="font-semibold text-sm mt-0.5">{fmtRp(totalPdpt - totalBelanja)}</div>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <Card className="p-3 sm:text-center"><div className="flex sm:block items-baseline justify-between gap-2"><div className="text-xs text-zinc-500">Belanja</div><div className="font-semibold text-sm mt-0.5">{fmtRp(totalBelanja)}</div></div></Card>
+        <Card className="p-3 sm:text-center"><div className="flex sm:block items-baseline justify-between gap-2"><div className="text-xs text-zinc-500">Pendapatan</div><div className="font-semibold text-sm mt-0.5">{fmtRp(totalPdpt)}</div></div></Card>
+        <Card className={`p-3 sm:text-center border ${totalPdpt - totalBelanja === 0 ? "bg-emerald-50 border-emerald-200" : totalPdpt - totalBelanja > 0 ? "bg-amber-50 border-amber-200" : "bg-red-50 border-red-200"}`}>
+          <div className="flex sm:block items-baseline justify-between gap-2"><div className="text-xs text-zinc-500">Selisih · {totalPdpt - totalBelanja === 0 ? "Pas" : totalPdpt - totalBelanja > 0 ? "Lebih" : "Kurang"}</div><div className="font-semibold text-sm mt-0.5">{fmtRp(totalPdpt - totalBelanja)}</div></div>
         </Card>
       </div>
 
@@ -144,8 +144,25 @@ export default function RKASPage() {
         </div>
       </Card>
 
-      <Card className="p-3 overflow-x-auto">
+      <Card className="p-3">
         <Kicker>Daftar belanja</Kicker>
+        <div className="mt-2 space-y-1.5 sm:hidden" role="list" aria-label="Daftar belanja">
+          {rkas.baris.length === 0 && <div className="text-xs text-zinc-500 py-6 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada baris</div>}
+          {rkas.baris.map((b, i) => (
+            <div key={b.id} role="listitem" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2.5 flex gap-2 items-center">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-xs font-medium">#{i + 1}</span>
+                  <span className="text-xs text-zinc-500">{b.bulan}</span>
+                </div>
+                <div className="text-xs text-zinc-600 mt-0.5 leading-4">{b.uraian_kegiatan}</div>
+                <div className="text-xs font-medium tabular-nums mt-0.5">{fmtRp(b.total)}</div>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus "${b.uraian_kegiatan.slice(0, 40)}"?`)) return; removeBaris(b.id); }}>Hapus</Button>
+            </div>
+          ))}
+        </div>
+        <div className="overflow-x-auto hidden sm:block">
         <table className="w-full text-sm mt-2 border border-[#ece9f5] rounded-xl overflow-hidden">
           <thead className="bg-[#f8f7ff] text-zinc-600">
             <tr><th scope="col" className="px-2 py-2 text-left font-semibold">No</th><th scope="col" className="px-2 py-2 text-left font-semibold">Kegiatan</th><th scope="col" className="px-2 py-2 text-left font-semibold">Uraian</th><th scope="col" className="px-2 py-2 font-semibold">Bulan</th><th scope="col" className="px-2 py-2 text-right font-semibold">Total</th><th></th></tr>
@@ -164,6 +181,7 @@ export default function RKASPage() {
             ))}
           </tbody>
         </table>
+        </div>
         <div className="mt-2 text-right text-sm font-semibold">Grand Total: {fmtRp(totalBelanja)}</div>
       </Card>
 

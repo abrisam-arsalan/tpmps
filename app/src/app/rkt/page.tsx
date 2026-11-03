@@ -104,7 +104,7 @@ export default function RKTPage() {
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-3 justify-between items-start">
-        <PageHead title={`Tahun ${tahun} — ${rkt.kegiatan.length}/${RKT_MAX}`} kicker="Rencana Tahunan" />
+        <PageHead title={`Tahun ${tahun} — ${rkt.kegiatan.length} dari ${RKT_MAX}`} kicker="Rencana Tahunan" />
         <label><span className="sr-only">Tahun ajaran</span><select value={tahun} onChange={(e) => setTahun(e.target.value)} aria-label="Tahun ajaran" className="min-h-[44px] rounded-xl border border-[#ece9f5] bg-white px-3 text-sm">
           {TAHUN_OPSI.map((t) => <option key={t} value={t}>{t}</option>)}
         </select></label>
@@ -114,7 +114,7 @@ export default function RKTPage() {
       <DocActions status={rkt.status} onSiapCetak={() => persist({ ...rkt, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...rkt, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkt, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkt.scanDataUrl} sahHint={!rkt.scanDataUrl ? "Upload scan dulu" : undefined} />
 
       <div className="flex flex-wrap gap-2 items-center text-sm rounded-2xl border border-[#ece9f5] bg-white p-3">
-        <Badge tone={rkt.kegiatan.length >= RKT_MAX ? "merah" : rkt.kegiatan.length >= 10 ? "kuning" : "hijau"}>{rkt.kegiatan.length}/{RKT_MAX}</Badge>
+        <Badge tone={rkt.kegiatan.length >= RKT_MAX ? "merah" : rkt.kegiatan.length >= 10 ? "kuning" : "hijau"}>{rkt.kegiatan.length} dari {RKT_MAX}</Badge>
         <span className="text-zinc-600">Butuh anggaran <strong className="text-zinc-900">{biayaYa}</strong> · Tanpa biaya: {rkt.kegiatan.length - biayaYa}</span>
         <span className="ml-auto text-xs text-zinc-500">{rkjm.sasaran.length} sasaran RKJM</span>
       </div>
@@ -158,7 +158,23 @@ export default function RKTPage() {
 
       <Card className="p-3 sm:p-4">
         <Kicker>Daftar prioritas — {tahun}</Kicker>
-        <div className="mt-2 overflow-x-auto rounded-xl border border-[#ece9f5]">
+        <div className="mt-2 space-y-1.5 sm:hidden" role="list" aria-label="Daftar prioritas">
+          {rkt.kegiatan.length === 0 && <div className="text-xs text-zinc-500 py-6 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada — klik #1 sampai #12 di atas</div>}
+          {rkt.kegiatan.map((k) => (
+            <div key={k.id} role="listitem" className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2.5 flex gap-2 items-center">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-mono text-xs font-medium">#{k.no} {k.identifikasi_kode}</span>
+                  {k.akar_kode && <span className="font-mono text-xs text-zinc-500">{k.akar_kode}</span>}
+                </div>
+                <div className="text-xs text-zinc-600 mt-0.5 leading-4">{k.kegiatan_benahi}</div>
+                <div className="mt-1"><Badge tone={k.biaya === "Ya" ? "hijau" : "netral"}>{k.biaya === "Ya" ? "Butuh anggaran" : "Tanpa biaya"}</Badge></div>
+              </div>
+              <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus prioritas #${k.no}?`)) return; removeKegiatan(k.id); }}>Hapus</Button>
+            </div>
+          ))}
+        </div>
+        <div className="mt-2 overflow-x-auto rounded-xl border border-[#ece9f5] hidden sm:block">
           <table className="w-full text-sm">
             <thead className="bg-[#f8f7ff] text-zinc-600">
               <tr><th scope="col" className="text-left px-2 py-2 font-semibold">No</th><th scope="col" className="text-left px-2 py-2 font-semibold">Kode</th><th scope="col" className="text-left px-2 py-2 font-semibold">Akar</th><th scope="col" className="text-left px-2 py-2 font-semibold">Kegiatan</th><th scope="col" className="text-left px-2 py-2 font-semibold">Biaya</th><th scope="col" className="px-2 py-2"></th></tr>
@@ -171,7 +187,7 @@ export default function RKTPage() {
                   <td className="px-2 py-2 font-mono text-xs">{k.identifikasi_kode}</td>
                   <td className="px-2 py-2 font-mono text-xs">{k.akar_kode ?? "—"}</td>
                   <td className="px-2 py-2 text-xs max-w-[260px] leading-4">{k.kegiatan_benahi}</td>
-                  <td className="px-2 py-2"><Badge tone={k.biaya === "Ya" ? "hijau" : "netral"}>{k.biaya === "Ya" ? "Ya" : "Tidak"}</Badge></td>
+                  <td className="px-2 py-2"><Badge tone={k.biaya === "Ya" ? "hijau" : "netral"}>{k.biaya === "Ya" ? "Butuh anggaran" : "Tanpa biaya"}</Badge></td>
                   <td className="px-2 py-2"><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus prioritas #${k.no}?`)) return; removeKegiatan(k.id); }}>Hapus</Button></td>
                 </tr>
               ))}

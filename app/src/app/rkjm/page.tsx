@@ -112,8 +112,10 @@ export default function RKJMPage() {
       </Card>
 
       <Card className="p-4">
-        <Kicker>Sasaran</Kicker>
-        <div className="mt-2 grid gap-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff] p-3">
+        <Kicker>Sasaran · {rkjm.sasaran.length}</Kicker>
+        <details className="mt-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff]">
+          <summary className="min-h-[44px] flex items-center justify-between px-3 py-2 text-xs font-medium text-zinc-600 cursor-pointer list-none">Tambah sasaran<span aria-hidden="true" className="text-zinc-400">+</span></summary>
+          <div className="grid gap-2 p-3 pt-0">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <label className="block"><span className="sr-only">Judul sasaran</span><input value={sasaranForm.judul} onChange={(e) => setSasaranForm({ ...sasaranForm, judul: e.target.value })} placeholder="Judul sasaran" aria-label="Judul sasaran" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
             <label className="block"><span className="sr-only">Indikator Rapor</span><select value={sasaranForm.indikator} onChange={(e) => setSasaranForm({ ...sasaranForm, indikator: e.target.value })} aria-label="Indikator Rapor" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm">
@@ -125,7 +127,8 @@ export default function RKJMPage() {
             <label className="block"><span className="sr-only">Penanggung jawab</span><input value={sasaranForm.pj} onChange={(e) => setSasaranForm({ ...sasaranForm, pj: e.target.value })} placeholder="Penanggung jawab" aria-label="Penanggung jawab" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
             <Button size="sm" onClick={addSasaran}>Tambah</Button>
           </div>
-        </div>
+          </div>
+        </details>
         <div className="mt-2 space-y-1.5">
           {rkjm.sasaran.length === 0 && <div className="text-xs text-zinc-500 py-3 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada — tambah sasaran.</div>}
           {rkjm.sasaran.map((s) => (
@@ -140,12 +143,15 @@ export default function RKJMPage() {
       </Card>
 
       <Card className="p-4">
-        <Kicker>Program dan Peta Jalan</Kicker>
-        <div className="mt-2 grid gap-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff] p-3">
+        <Kicker>Program dan Peta Jalan · {rkjm.program.length}</Kicker>
+        <details className="mt-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff]">
+          <summary className="min-h-[44px] flex items-center justify-between px-3 py-2 text-xs font-medium text-zinc-600 cursor-pointer list-none">Tambah program<span aria-hidden="true" className="text-zinc-400">+</span></summary>
+          <div className="grid gap-2 p-3 pt-0">
           <label className="block"><span className="sr-only">Nama program</span><input value={programForm.nama} onChange={(e) => setProgramForm({ ...programForm, nama: e.target.value })} placeholder="Nama program" aria-label="Nama program" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
           <label className="block"><span className="sr-only">Strategi</span><textarea value={programForm.strategi} onChange={(e) => setProgramForm({ ...programForm, strategi: e.target.value })} placeholder="Strategi — 1 kalimat" aria-label="Strategi" rows={2} className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
           <Button size="sm" className="self-start" onClick={addProgram}>Tambah program</Button>
-        </div>
+          </div>
+        </details>
         <div className="mt-2 space-y-1.5">
           {rkjm.program.length === 0 && <div className="text-xs text-zinc-500 py-2 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada program.</div>}
           {rkjm.program.map((p) => <div key={p.id} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 flex gap-2 items-center"><div className="flex-1 min-w-0"><div className="text-xs font-medium">{p.nama}</div>{p.strategi && <div className="text-xs text-zinc-500 mt-0.5">{p.strategi}</div>}</div><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus program "${p.nama.slice(0, 40)}"?`)) return; save({ ...rkjm, program: rkjm.program.filter((x) => x.id !== p.id) }, "Dihapus."); }}>Hapus</Button></div>)}

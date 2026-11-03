@@ -84,6 +84,10 @@ export function Kicker({ children }: { children: React.ReactNode }) {
   return <span className="block text-[11px] font-semibold tracking-[0.14em] uppercase text-zinc-500">{children}</span>;
 }
 
+export function CardTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-[11px] font-semibold tracking-[0.14em] uppercase text-zinc-500">{children}</h3>;
+}
+
 export function Stat({ label, value, hint }: { label: string; value: React.ReactNode; hint?: string }) {
   return (
     <div className="card-paper p-4">
