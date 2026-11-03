@@ -119,12 +119,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </nav>
 
-      <footer className="mx-auto max-w-[1280px] px-4 sm:px-6 py-6 text-xs text-zinc-500 hidden lg:block">
-        <div className="border-t border-[#ece9f5] pt-4 flex flex-wrap gap-3 justify-between">
-          <span>SMP Negeri 5 Tegal · RKJM 2026–2030 · Rapor 2025 · ARKAS 2026 Rp 628,28jt</span>
-          <span>Cetak manual + arsip permanen</span>
-        </div>
-      </footer>
     </div>
   );
 }
