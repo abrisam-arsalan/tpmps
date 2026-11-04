@@ -98,7 +98,11 @@ export default function RKASPage() {
       </div>
 
       {msg && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-2 text-xs">{msg}</div>}
-      <DocActions status={rkas.status} onSiapCetak={() => persist({ ...rkas, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...rkas, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkas, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkas.scanDataUrl} sahHint={!rkas.scanDataUrl ? "Upload scan dulu" : undefined} />
+      <DocActions status={rkas.status} onSiapCetak={() => persist({ ...rkas, status: "Siap Cetak" }, "Siap Cetak — isi terkunci.")} onSah={() => persist({ ...rkas, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkas, status: "Diarsipkan" }, "Diarsipkan")} onBatalkan={() => { if (!confirm("Batalkan Siap Cetak? Isi bisa diubah lagi.")) return; persist({ ...rkas, status: "Draft" }, "Kembali ke Draft — isi bisa diubah."); }} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkas.scanDataUrl} sahHint={!rkas.scanDataUrl ? "Upload scan dulu" : undefined} />
+
+      {rkas.status !== "Draft" && (
+        <div role="note" className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-4 text-amber-800">Terkunci — isi tidak bisa diubah. Klik <strong>Batalkan</strong> untuk mengubah lagi.</div>
+      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Card className="p-3 sm:text-center"><div className="flex sm:block items-baseline justify-between gap-2"><div className="text-xs text-zinc-500">Belanja</div><div className="font-semibold text-sm mt-0.5">{fmtRp(totalBelanja)}</div></div></Card>
@@ -108,6 +112,8 @@ export default function RKASPage() {
         </Card>
       </div>
 
+      {rkas.status === "Draft" && (
+      <>
       <Card className="p-3">
         <Kicker>Pendapatan</Kicker>
         <div className="mt-2 space-y-1.5">
@@ -143,6 +149,8 @@ export default function RKASPage() {
           </div>
         </div>
       </Card>
+      </>
+      )}
 
       <Card className="p-3">
         <Kicker>Daftar belanja</Kicker>
@@ -158,7 +166,7 @@ export default function RKASPage() {
                 <div className="text-xs text-zinc-600 mt-0.5 leading-4">{b.uraian_kegiatan}</div>
                 <div className="text-xs font-medium tabular-nums mt-0.5">{fmtRp(b.total)}</div>
               </div>
-              <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus "${b.uraian_kegiatan.slice(0, 40)}"?`)) return; removeBaris(b.id); }}>Hapus</Button>
+              {rkas.status === "Draft" && <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus "${b.uraian_kegiatan.slice(0, 40)}"?`)) return; removeBaris(b.id); }}>Hapus</Button>}
             </div>
           ))}
         </div>
@@ -176,7 +184,7 @@ export default function RKASPage() {
                 <td className="px-2 py-2 text-xs max-w-[180px]">{b.uraian_kegiatan}</td>
                 <td className="px-2 py-2 text-xs text-center">{b.bulan}</td>
                 <td className="px-2 py-2 text-right tabular-nums text-xs font-medium">{fmtRp(b.total)}</td>
-                <td className="px-2 py-2"><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus "${b.uraian_kegiatan.slice(0, 40)}"?`)) return; removeBaris(b.id); }}>Hapus</Button></td>
+                <td className="px-2 py-2">{rkas.status === "Draft" && <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus "${b.uraian_kegiatan.slice(0, 40)}"?`)) return; removeBaris(b.id); }}>Hapus</Button>}</td>
               </tr>
             ))}
           </tbody>
@@ -201,7 +209,7 @@ export default function RKASPage() {
         </div>
       </details>
 
-      <ScanUpload label="Scan pengesahan RKAS" currentName={rkas.scanName} currentDataUrl={rkas.scanDataUrl} onChange={(n, d) => persist({ ...rkas, scanName: n, scanDataUrl: d, status: rkas.status === "Sah" ? "Sah" : rkas.status === "Siap Cetak" ? "Menunggu Scan" : rkas.status }, "Scan tersimpan")} onClear={() => persist({ ...rkas, scanName: null, scanDataUrl: null }, "Scan dihapus")} />
+      {rkas.status === "Draft" && <ScanUpload label="Scan pengesahan RKAS" currentName={rkas.scanName} currentDataUrl={rkas.scanDataUrl} onChange={(n, d) => persist({ ...rkas, scanName: n, scanDataUrl: d, status: rkas.status === "Sah" ? "Sah" : rkas.status === "Siap Cetak" ? "Menunggu Scan" : rkas.status }, "Scan tersimpan")} onClear={() => persist({ ...rkas, scanName: null, scanDataUrl: null }, "Scan dihapus")} />}
     </div>
   );
 }

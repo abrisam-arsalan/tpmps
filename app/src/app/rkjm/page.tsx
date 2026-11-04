@@ -92,27 +92,32 @@ export default function RKJMPage() {
       </div>
 
       {saveMsg && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-2 text-xs">{saveMsg}</div>}
-      <DocActions status={rkjm.status} onSiapCetak={() => save({ ...rkjm, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => save({ ...rkjm, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => save({ ...rkjm, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkjm.scanDataUrl} sahHint={!rkjm.scanDataUrl ? "Upload scan dulu" : undefined} />
+      <DocActions status={rkjm.status} onSiapCetak={() => save({ ...rkjm, status: "Siap Cetak" }, "Siap Cetak — isi terkunci.")} onSah={() => save({ ...rkjm, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => save({ ...rkjm, status: "Diarsipkan" }, "Diarsipkan")} onBatalkan={() => { if (!confirm("Batalkan Siap Cetak? Isi bisa diubah lagi.")) return; save({ ...rkjm, status: "Draft" }, "Kembali ke Draft — isi bisa diubah."); }} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkjm.scanDataUrl} sahHint={!rkjm.scanDataUrl ? "Upload scan dulu" : undefined} />
+
+      {rkjm.status !== "Draft" && (
+        <div role="note" className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-4 text-amber-800">Terkunci — isi tidak bisa diubah. Klik <strong>Batalkan</strong> untuk mengubah lagi.</div>
+      )}
 
       <Card className="p-4 space-y-3">
         <div className="flex gap-2 items-center"><Badge tone="hijau">Periode {PERIODE}</Badge><Badge>{rkjm.status}</Badge></div>
         <label className="block">
           <span className="text-xs font-medium text-zinc-700">Visi</span>
-          <textarea value={rkjm.visi} onChange={(e) => setRkjm({ ...rkjm, visi: e.target.value })} rows={2} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <textarea value={rkjm.visi} onChange={(e) => setRkjm({ ...rkjm, visi: e.target.value })} rows={2} disabled={rkjm.status !== "Draft"} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm disabled:bg-[#f8f7ff] disabled:text-zinc-500" />
         </label>
         <label className="block">
           <span className="text-xs font-medium text-zinc-700">Misi — satu per baris</span>
-          <textarea value={rkjm.misi.join("\n")} onChange={(e) => setRkjm({ ...rkjm, misi: e.target.value.split("\n") })} rows={3} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <textarea value={rkjm.misi.join("\n")} onChange={(e) => setRkjm({ ...rkjm, misi: e.target.value.split("\n") })} rows={3} disabled={rkjm.status !== "Draft"} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm disabled:bg-[#f8f7ff] disabled:text-zinc-500" />
         </label>
         <label className="block">
           <span className="text-xs font-medium text-zinc-700">Tujuan</span>
-          <input value={rkjm.tujuan} onChange={(e) => setRkjm({ ...rkjm, tujuan: e.target.value })} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <input value={rkjm.tujuan} onChange={(e) => setRkjm({ ...rkjm, tujuan: e.target.value })} disabled={rkjm.status !== "Draft"} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm disabled:bg-[#f8f7ff] disabled:text-zinc-500" />
         </label>
-        <Button size="sm" onClick={() => save(rkjm)}>Simpan</Button>
+        {rkjm.status === "Draft" && <Button size="sm" onClick={() => save(rkjm)}>Simpan</Button>}
       </Card>
 
       <Card className="p-4">
         <Kicker>Sasaran · {rkjm.sasaran.length}</Kicker>
+        {rkjm.status === "Draft" && (
         <details className="mt-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff]">
           <summary className="min-h-[44px] flex items-center justify-between px-3 py-2 text-xs font-medium text-zinc-600 cursor-pointer list-none">Tambah sasaran<span aria-hidden="true" className="text-zinc-400">+</span></summary>
           <div className="grid gap-2 p-3 pt-0">
@@ -129,6 +134,7 @@ export default function RKJMPage() {
           </div>
           </div>
         </details>
+        )}
         <div className="mt-2 space-y-1.5">
           {rkjm.sasaran.length === 0 && <div className="text-xs text-zinc-500 py-3 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada — tambah sasaran.</div>}
           {rkjm.sasaran.map((s) => (
@@ -136,7 +142,7 @@ export default function RKJMPage() {
               <span className="font-mono text-xs font-medium">{s.kode}</span>
               <span className="text-xs flex-1 truncate">{s.judul} <Badge className="ml-1">{s.indikator_rapor_kode}</Badge></span>
               <span className="text-xs text-zinc-500 hidden sm:inline">{s.target["2029/2030"]} · {s.penanggung_jawab}</span>
-              <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus sasaran "${s.judul.slice(0, 40)}"?`)) return; removeSasaran(s.id); }}>Hapus</Button>
+              {rkjm.status === "Draft" && <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus sasaran "${s.judul.slice(0, 40)}"?`)) return; removeSasaran(s.id); }}>Hapus</Button>}
             </div>
           ))}
         </div>
@@ -144,6 +150,7 @@ export default function RKJMPage() {
 
       <Card className="p-4">
         <Kicker>Program dan Peta Jalan · {rkjm.program.length}</Kicker>
+        {rkjm.status === "Draft" && (
         <details className="mt-2 rounded-2xl border border-[#ece9f5] bg-[#f8f7ff]">
           <summary className="min-h-[44px] flex items-center justify-between px-3 py-2 text-xs font-medium text-zinc-600 cursor-pointer list-none">Tambah program<span aria-hidden="true" className="text-zinc-400">+</span></summary>
           <div className="grid gap-2 p-3 pt-0">
@@ -152,21 +159,22 @@ export default function RKJMPage() {
           <Button size="sm" className="self-start" onClick={addProgram}>Tambah program</Button>
           </div>
         </details>
+        )}
         <div className="mt-2 space-y-1.5">
           {rkjm.program.length === 0 && <div className="text-xs text-zinc-500 py-2 text-center border border-dashed border-[#ece9f5] rounded-xl">Belum ada program.</div>}
-          {rkjm.program.map((p) => <div key={p.id} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 flex gap-2 items-center"><div className="flex-1 min-w-0"><div className="text-xs font-medium">{p.nama}</div>{p.strategi && <div className="text-xs text-zinc-500 mt-0.5">{p.strategi}</div>}</div><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus program "${p.nama.slice(0, 40)}"?`)) return; save({ ...rkjm, program: rkjm.program.filter((x) => x.id !== p.id) }, "Dihapus."); }}>Hapus</Button></div>)}
+          {rkjm.program.map((p) => <div key={p.id} className="rounded-xl border border-[#ece9f5] bg-white px-3 py-2 flex gap-2 items-center"><div className="flex-1 min-w-0"><div className="text-xs font-medium">{p.nama}</div>{p.strategi && <div className="text-xs text-zinc-500 mt-0.5">{p.strategi}</div>}</div>{rkjm.status === "Draft" && <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus program "${p.nama.slice(0, 40)}"?`)) return; save({ ...rkjm, program: rkjm.program.filter((x) => x.id !== p.id) }, "Dihapus."); }}>Hapus</Button>}</div>)}
         </div>
         <label className="block mt-3">
           <span className="text-xs font-medium text-zinc-700">MONEV</span>
-          <textarea value={rkjm.bab6_monev} onChange={(e) => setRkjm({ ...rkjm, bab6_monev: e.target.value })} rows={2} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" />
+          <textarea value={rkjm.bab6_monev} onChange={(e) => setRkjm({ ...rkjm, bab6_monev: e.target.value })} rows={2} disabled={rkjm.status !== "Draft"} className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm disabled:bg-[#f8f7ff] disabled:text-zinc-500" />
         </label>
         <div className="mt-2 flex gap-2">
-          <Button size="sm" onClick={() => save(rkjm)}>Simpan</Button>
+          {rkjm.status === "Draft" && <Button size="sm" onClick={() => save(rkjm)}>Simpan</Button>}
           <Link href="/rkt" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka RKT</Link>
         </div>
       </Card>
 
-      <ScanUpload label="Scan pengesahan RKJM" currentName={rkjm.scanName} currentDataUrl={rkjm.scanDataUrl} onChange={(n,d)=>save({...rkjm, scanName:n, scanDataUrl:d, status: rkjm.status==="Sah"?"Sah": rkjm.status==="Siap Cetak"?"Menunggu Scan": rkjm.status },"Scan tersimpan")} onClear={()=>save({...rkjm, scanName:null, scanDataUrl:null},"Scan dihapus")} />
+      {rkjm.status === "Draft" && <ScanUpload label="Scan pengesahan RKJM" currentName={rkjm.scanName} currentDataUrl={rkjm.scanDataUrl} onChange={(n,d)=>save({...rkjm, scanName:n, scanDataUrl:d, status: rkjm.status==="Sah"?"Sah": rkjm.status==="Siap Cetak"?"Menunggu Scan": rkjm.status },"Scan tersimpan")} onClear={()=>save({...rkjm, scanName:null, scanDataUrl:null},"Scan dihapus")} />}
     </div>
   );
 }

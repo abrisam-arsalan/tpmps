@@ -22,6 +22,7 @@ export function DocActions({
   onSiapCetak,
   onSah,
   onArsipkan,
+  onBatalkan,
   onExportExcel,
   onCetak,
   disableSah,
@@ -31,6 +32,7 @@ export function DocActions({
   onSiapCetak: () => void;
   onSah: () => void;
   onArsipkan?: () => void;
+  onBatalkan?: () => void;
   onExportExcel: () => void;
   onCetak: () => void;
   disableSah?: boolean;
@@ -47,6 +49,7 @@ export function DocActions({
           {status === "Draft" && <Button size="md" onClick={onSiapCetak}>Siap Cetak</Button>}
           {canSah && <Button size="md" onClick={onSah}>Tandai Sah</Button>}
           {status === "Sah" && onArsipkan && <Button variant="secondary" size="md" onClick={onArsipkan}>Arsipkan</Button>}
+          {status !== "Draft" && onBatalkan && <Button variant="secondary" size="md" onClick={onBatalkan}>Batalkan</Button>}
         </div>
         <div className="ml-auto flex gap-1.5">
           <Button variant="ghost" size="sm" onClick={onExportExcel}>Export Excel</Button>

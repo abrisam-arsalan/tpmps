@@ -99,8 +99,14 @@ export default function KSPPage() {
       {showInfo && <div className="rounded-xl border border-[#ece9f5] bg-[#f8f7ff] px-3 py-2.5 text-xs leading-4 text-zinc-600">Visi dan Misi mengikuti RKJM. Koding kelas 7 opsional, Kepanduan wajib.</div>}
       {showBanner && !showInfo && <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">CP Agama diperbarui — cek Bank CP di bawah.</div>}
       {msg && <div role="status" aria-live="polite" className="rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800 px-3 py-2 text-xs">{msg}</div>}
-      <DocActions status={ksp.status} onSiapCetak={() => persist({ ...ksp, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...ksp, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...ksp, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!ksp.scanDataUrl} sahHint={!ksp.scanDataUrl ? "Upload scan dulu" : undefined} />
+      <DocActions status={ksp.status} onSiapCetak={() => persist({ ...ksp, status: "Siap Cetak" }, "Siap Cetak — isi terkunci.")} onSah={() => persist({ ...ksp, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...ksp, status: "Diarsipkan" }, "Diarsipkan")} onBatalkan={() => { if (!confirm("Batalkan Siap Cetak? Isi bisa diubah lagi.")) return; persist({ ...ksp, status: "Draft" }, "Kembali ke Draft — isi bisa diubah."); }} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!ksp.scanDataUrl} sahHint={!ksp.scanDataUrl ? "Upload scan dulu" : undefined} />
 
+      {ksp.status !== "Draft" && (
+        <div role="note" className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-4 text-amber-800">Terkunci — isi tidak bisa diubah. Klik <strong>Batalkan</strong> untuk mengubah lagi.</div>
+      )}
+
+      {ksp.status === "Draft" && (
+      <>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <Card className="p-3 space-y-2">
           <label className="block"><Kicker>1 — Karakteristik</Kicker><textarea value={ksp.komponen.karakteristik} onChange={(e) => setKsp({ ...ksp, komponen: { ...ksp.komponen, karakteristik: e.target.value } })} rows={3} aria-label="Karakteristik" className="mt-1 w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
@@ -154,6 +160,8 @@ export default function KSPPage() {
       </Card>
 
       <ScanUpload label="Scan pengesahan Kurikulum" currentName={ksp.scanName} currentDataUrl={ksp.scanDataUrl} onChange={(n, d) => persist({ ...ksp, scanName: n, scanDataUrl: d, status: ksp.status === "Sah" ? "Sah" : ksp.status === "Siap Cetak" ? "Menunggu Scan" : ksp.status }, "Scan tersimpan")} onClear={() => persist({ ...ksp, scanName: null, scanDataUrl: null }, "Scan dihapus")} />
+      </>
+      )}
     </div>
   );
 }

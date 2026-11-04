@@ -111,7 +111,11 @@ export default function RKTPage() {
       </div>
 
       {msg && <div role="status" aria-live="polite" className={`rounded-xl border px-3 py-2 text-sm ${msg.includes("Maksimal") ? "bg-amber-50 border-amber-100 text-amber-800" : "bg-emerald-50 border-emerald-100 text-emerald-800"}`}>{msg}</div>}
-      <DocActions status={rkt.status} onSiapCetak={() => persist({ ...rkt, status: "Siap Cetak" }, "Siap Cetak")} onSah={() => persist({ ...rkt, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkt, status: "Diarsipkan" }, "Diarsipkan")} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkt.scanDataUrl} sahHint={!rkt.scanDataUrl ? "Upload scan dulu" : undefined} />
+      <DocActions status={rkt.status} onSiapCetak={() => persist({ ...rkt, status: "Siap Cetak" }, "Siap Cetak — isi terkunci.")} onSah={() => persist({ ...rkt, status: "Sah" }, "Sah — arsip permanen")} onArsipkan={() => persist({ ...rkt, status: "Diarsipkan" }, "Diarsipkan")} onBatalkan={() => { if (!confirm("Batalkan Siap Cetak? Isi bisa diubah lagi.")) return; persist({ ...rkt, status: "Draft" }, "Kembali ke Draft — isi bisa diubah."); }} onExportExcel={doExportExcel} onCetak={doCetak} disableSah={!rkt.scanDataUrl} sahHint={!rkt.scanDataUrl ? "Upload scan dulu" : undefined} />
+
+      {rkt.status !== "Draft" && (
+        <div role="note" className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-4 text-amber-800">Terkunci — isi tidak bisa diubah. Klik <strong>Batalkan</strong> untuk mengubah lagi.</div>
+      )}
 
       <div className="flex flex-wrap gap-2 items-center text-sm rounded-2xl border border-[#ece9f5] bg-white p-3">
         <Badge tone={rkt.kegiatan.length >= RKT_MAX ? "merah" : rkt.kegiatan.length >= 10 ? "kuning" : "hijau"}>{rkt.kegiatan.length} dari {RKT_MAX}</Badge>
@@ -119,6 +123,8 @@ export default function RKTPage() {
         <span className="ml-auto text-xs text-zinc-500">{rkjm.sasaran.length} sasaran RKJM</span>
       </div>
 
+      {rkt.status === "Draft" && (
+      <>
       <Card className="p-4 space-y-3">
         <Kicker>Evaluasi tahun lalu</Kicker>
         <label className="block"><span className="sr-only">Evaluasi tahun lalu</span><textarea value={rkt.evaluasi_lalu} onChange={(e) => setRkt({ ...rkt, evaluasi_lalu: e.target.value })} rows={2} placeholder="Capaian tahun lalu, kendala, tindak lanjut" aria-label="Evaluasi tahun lalu" className="w-full rounded-xl border border-[#ece9f5] bg-white px-3 py-2 text-sm" /></label>
@@ -155,6 +161,8 @@ export default function RKTPage() {
           </div>
         </div>
       </Card>
+      </>
+      )}
 
       <Card className="p-3 sm:p-4">
         <Kicker>Daftar prioritas — {tahun}</Kicker>
@@ -170,7 +178,7 @@ export default function RKTPage() {
                 <div className="text-xs text-zinc-600 mt-0.5 leading-4">{k.kegiatan_benahi}</div>
                 <div className="mt-1"><Badge tone={k.biaya === "Ya" ? "hijau" : "netral"}>{k.biaya === "Ya" ? "Butuh anggaran" : "Tanpa biaya"}</Badge></div>
               </div>
-              <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus prioritas #${k.no}?`)) return; removeKegiatan(k.id); }}>Hapus</Button>
+              {rkt.status === "Draft" && <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus prioritas #${k.no}?`)) return; removeKegiatan(k.id); }}>Hapus</Button>}
             </div>
           ))}
         </div>
@@ -188,19 +196,19 @@ export default function RKTPage() {
                   <td className="px-2 py-2 font-mono text-xs">{k.akar_kode ?? "—"}</td>
                   <td className="px-2 py-2 text-xs max-w-[260px] leading-4">{k.kegiatan_benahi}</td>
                   <td className="px-2 py-2"><Badge tone={k.biaya === "Ya" ? "hijau" : "netral"}>{k.biaya === "Ya" ? "Butuh anggaran" : "Tanpa biaya"}</Badge></td>
-                  <td className="px-2 py-2"><Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus prioritas #${k.no}?`)) return; removeKegiatan(k.id); }}>Hapus</Button></td>
+                  <td className="px-2 py-2">{rkt.status === "Draft" && <Button variant="ghost" size="sm" onClick={() => { if (!confirm(`Hapus prioritas #${k.no}?`)) return; removeKegiatan(k.id); }}>Hapus</Button>}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Button variant="secondary" size="sm" onClick={() => persist(rkt, "Tersimpan")}>Simpan</Button>
+          {rkt.status === "Draft" && <Button variant="secondary" size="sm" onClick={() => persist(rkt, "Tersimpan")}>Simpan</Button>}
           <Link href="/rkas" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka Anggaran</Link>
           <Link href="/ksp" className="min-h-[44px] px-5 inline-flex items-center justify-center rounded-xl border border-[#ece9f5] bg-white text-xs font-medium">Buka Kurikulum</Link>
         </div>
       </Card>
-      <ScanUpload label="Scan pengesahan" currentName={rkt.scanName} currentDataUrl={rkt.scanDataUrl} onChange={(n,d)=>persist({...rkt, scanName:n, scanDataUrl:d, status: rkt.status==="Sah"?"Sah": rkt.status==="Siap Cetak"?"Menunggu Scan": rkt.status },"Scan tersimpan")} onClear={()=>persist({...rkt, scanName:null, scanDataUrl:null},"Scan dihapus")} />
+      {rkt.status === "Draft" && <ScanUpload label="Scan pengesahan" currentName={rkt.scanName} currentDataUrl={rkt.scanDataUrl} onChange={(n,d)=>persist({...rkt, scanName:n, scanDataUrl:d, status: rkt.status==="Sah"?"Sah": rkt.status==="Siap Cetak"?"Menunggu Scan": rkt.status },"Scan tersimpan")} onClear={()=>persist({...rkt, scanName:null, scanDataUrl:null},"Scan dihapus")} />}
     </div>
   );
 }
